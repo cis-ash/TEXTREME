@@ -1,0 +1,589 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Base.gd" type="Script" id=1]
+[ext_resource path="res://EffectManager.gd" type="Script" id=2]
+[ext_resource path="res://Theme.tres" type="Theme" id=3]
+[ext_resource path="res://RhythmControl.gd" type="Script" id=4]
+[ext_resource path="res://Sprites/slider.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/target.png" type="Texture" id=6]
+[ext_resource path="res://Sounds/250551__druminfected__metronomeup.wav" type="AudioStream" id=7]
+[ext_resource path="res://Sounds/keystroke.wav" type="AudioStream" id=8]
+[ext_resource path="res://Sounds/enter.wav" type="AudioStream" id=9]
+
+[node name="Base" type="CanvasLayer" index="0"]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+script = ExtResource( 1 )
+keyoffother = 2
+keyoffspace = 4
+keyoffenter = 8
+keyoffdelete = 4
+keytimeother = 0.1
+keytimespace = 0.2
+keytimeenter = 0.4
+keytimedelete = 0.2
+flashtimeother = 0.1
+flashtimespace = 0.2
+flashtimeenter = 0.4
+flashtimedelete = 0.2
+charsize = Vector2( 9, 13 )
+
+[node name="BackgroundColor" type="ColorRect" parent="." index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -70.0
+margin_top = -73.0
+margin_right = 108.0
+margin_bottom = 90.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+color = Color( 0, 0, 0, 1 )
+_sections_unfolded = [ "Material", "Rect", "Theme", "Visibility" ]
+
+[node name="EffectManager" type="Node" parent="." index="1"]
+
+script = ExtResource( 2 )
+
+[node name="UIBase" type="Control" parent="." index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Rect" ]
+
+[node name="ForgroundColor" type="ColorRect" parent="UIBase" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 2.0
+margin_top = 3.0
+margin_right = -4.0
+margin_bottom = -3.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+color = Color( 0.125, 0.125, 0.125, 1 )
+
+[node name="TextEdit" type="TextEdit" parent="UIBase" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_top = 6.0
+margin_right = -5.0
+margin_bottom = -78.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 3
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+text = ""
+readonly = false
+highlight_current_line = true
+syntax_highlighting = true
+show_line_numbers = true
+highlight_all_occurrences = false
+override_selected_font_color = false
+context_menu_enabled = true
+smooth_scrolling = false
+v_scroll_speed = 80.0
+hiding_enabled = 0
+wrap_lines = true
+caret_block_mode = true
+caret_blink = true
+caret_blink_speed = 0.5
+caret_moving_by_right_click = false
+_sections_unfolded = [ "Caret", "Focus", "Mouse", "Rect", "Theme" ]
+
+[node name="Save" type="Button" parent="UIBase" index="2"]
+
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_top = -74.0
+margin_right = 81.0
+margin_bottom = -54.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "SAVE"
+flat = false
+align = 1
+_sections_unfolded = [ "Theme" ]
+
+[node name="Save AS" type="Button" parent="UIBase" index="3"]
+
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_top = -50.0
+margin_right = 81.0
+margin_bottom = -30.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "SAVE AS"
+flat = false
+align = 1
+_sections_unfolded = [ "Theme" ]
+
+[node name="Load" type="Button" parent="UIBase" index="4"]
+
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_top = -26.0
+margin_right = 81.0
+margin_bottom = -6.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "LOAD"
+flat = false
+align = 1
+_sections_unfolded = [ "Theme" ]
+
+[node name="RhythmControl" type="Control" parent="UIBase" index="5"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 94.0
+margin_top = -74.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+script = ExtResource( 4 )
+allowance = 0.3
+metronomevolume = -15
+
+[node name="Beatslider" type="Control" parent="UIBase/RhythmControl" index="0"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -74.0
+margin_right = -156.0
+margin_bottom = -6.0
+rect_min_size = Vector2( 262, 68 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Anchor", "Rect", "Visibility" ]
+
+[node name="right" type="Position2D" parent="UIBase/RhythmControl/Beatslider" index="0"]
+
+[node name="slider1" type="Sprite" parent="UIBase/RhythmControl/Beatslider/right" index="0"]
+
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Visibility", "Z Index" ]
+
+[node name="slider2" type="Sprite" parent="UIBase/RhythmControl/Beatslider/right" index="1"]
+
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Z Index" ]
+
+[node name="left" type="Position2D" parent="UIBase/RhythmControl/Beatslider" index="1"]
+
+[node name="slider1" type="Sprite" parent="UIBase/RhythmControl/Beatslider/left" index="0"]
+
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Z Index" ]
+
+[node name="slider2" type="Sprite" parent="UIBase/RhythmControl/Beatslider/left" index="1"]
+
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Z Index" ]
+
+[node name="center" type="Position2D" parent="UIBase/RhythmControl/Beatslider" index="2"]
+
+[node name="target" type="Sprite" parent="UIBase/RhythmControl/Beatslider/center" index="0"]
+
+texture = ExtResource( 6 )
+_sections_unfolded = [ "Z Index" ]
+
+[node name="BPMcontroller" type="SpinBox" parent="UIBase/RhythmControl" index="1"]
+
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -142.0
+margin_top = -31.0
+margin_right = -8.0
+margin_bottom = -7.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+min_value = 0.0
+max_value = 3600.0
+step = 10.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = true
+editable = true
+prefix = ""
+suffix = "BPM"
+_sections_unfolded = [ "Focus", "Theme" ]
+
+[node name="CheckBox" type="CheckBox" parent="UIBase/RhythmControl" index="2"]
+
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -151.0
+margin_top = -64.0
+margin_right = -7.0
+margin_bottom = -40.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+toggle_mode = true
+enabled_focus_mode = 0
+shortcut = null
+group = null
+text = "Enable rhythm"
+flat = false
+align = 0
+_sections_unfolded = [ "Rect", "Theme", "custom_colors", "custom_fonts" ]
+
+[node name="Metronome" type="AudioStreamPlayer" parent="UIBase/RhythmControl" index="3"]
+
+stream = ExtResource( 7 )
+volume_db = -10.0
+pitch_scale = 1.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+[node name="Metronometimer" type="Timer" parent="UIBase/RhythmControl" index="4"]
+
+process_mode = 1
+wait_time = 4096.0
+one_shot = false
+autostart = true
+
+[node name="SaveDialog" type="WindowDialog" parent="UIBase" index="6"]
+
+editor/display_folded = true
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 74.0
+margin_top = 227.0
+margin_right = 228.0
+margin_bottom = 298.0
+rect_min_size = Vector2( 154, 71 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = ""
+resizable = false
+_sections_unfolded = [ "Rect" ]
+
+[node name="LineEdit" type="LineEdit" parent="UIBase/SaveDialog" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 3.0
+margin_top = 18.0
+margin_right = 150.0
+margin_bottom = 43.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = true
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Theme" ]
+
+[node name="Label" type="Label" parent="UIBase/SaveDialog" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 16.0
+margin_top = 5.0
+margin_right = 136.0
+margin_bottom = 19.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+theme = ExtResource( 3 )
+text = "Name your file!"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Theme" ]
+
+[node name="SaveButton" type="Button" parent="UIBase/SaveDialog" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 3.0
+margin_top = 47.0
+margin_right = 152.0
+margin_bottom = 67.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Save my text"
+flat = false
+align = 1
+_sections_unfolded = [ "Theme" ]
+
+[node name="LoadDialog" type="WindowDialog" parent="UIBase" index="7"]
+
+editor/display_folded = true
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 74.0
+margin_top = 227.0
+margin_right = 228.0
+margin_bottom = 298.0
+rect_min_size = Vector2( 154, 71 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = ""
+resizable = false
+_sections_unfolded = [ "Rect" ]
+
+[node name="LineEdit" type="LineEdit" parent="UIBase/LoadDialog" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 3.0
+margin_top = 18.0
+margin_right = 150.0
+margin_bottom = 43.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = true
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Theme" ]
+
+[node name="Label" type="Label" parent="UIBase/LoadDialog" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 31.0
+margin_top = 5.0
+margin_right = 151.0
+margin_bottom = 19.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+theme = ExtResource( 3 )
+text = "Which file?"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Theme" ]
+
+[node name="LoadButton" type="Button" parent="UIBase/LoadDialog" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 3.0
+margin_top = 47.0
+margin_right = 152.0
+margin_bottom = 67.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Load this file"
+flat = false
+align = 1
+_sections_unfolded = [ "Theme" ]
+
+[node name="Keystroke" type="AudioStreamPlayer" parent="." index="3"]
+
+stream = ExtResource( 8 )
+volume_db = -5.0
+pitch_scale = 1.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+[node name="Ding" type="AudioStreamPlayer" parent="." index="4"]
+
+stream = ExtResource( 9 )
+volume_db = 0.0
+pitch_scale = 1.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+[node name="StartTextPosition" type="Position2D" parent="." index="5"]
+
+position = Vector2( 25, 9 )
+
+[connection signal="pressed" from="UIBase/Save" to="." method="_on_Save_pressed"]
+
+[connection signal="pressed" from="UIBase/Save AS" to="." method="_on_Save_AS_pressed"]
+
+[connection signal="pressed" from="UIBase/Save AS" to="." method="_on_Save_pressed"]
+
+[connection signal="pressed" from="UIBase/Load" to="." method="_on_Load_pressed"]
+
+[connection signal="value_changed" from="UIBase/RhythmControl/BPMcontroller" to="UIBase/RhythmControl" method="_on_BPMcontroller_value_changed"]
+
+[connection signal="toggled" from="UIBase/RhythmControl/CheckBox" to="UIBase/RhythmControl" method="_on_CheckBox_toggled"]
+
+[connection signal="timeout" from="UIBase/RhythmControl/Metronometimer" to="UIBase/RhythmControl" method="_on_Metronometimer_timeout"]
+
+[connection signal="pressed" from="UIBase/SaveDialog/SaveButton" to="." method="_on_SaveButton_pressed"]
+
+[connection signal="pressed" from="UIBase/LoadDialog/LoadButton" to="." method="_on_LoadButton_pressed"]
+
+

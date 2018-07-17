@@ -1,0 +1,123 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Effects/Effect.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+
+[sub_resource type="Curve" id=1]
+
+min_value = -360.0
+max_value = 360.0
+bake_resolution = 100
+_data = [ Vector2( 0, -360 ), 0.0, 0.0, 0, 0, Vector2( 0.381001, 360 ), -12302.4, 0.0, 0, 0, Vector2( 0.504151, 23.2031 ), 21240.5, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=2]
+
+flags = 4
+width = 2048
+curve = SubResource( 1 )
+
+[sub_resource type="Curve" id=3]
+
+min_value = 0.0
+max_value = 1.0
+bake_resolution = 100
+_data = [ Vector2( 0, 0.295898 ), 0.0, 4.08786, 0, 0, Vector2( 0.0305752, 0.918945 ), 5.17554, 5.17554, 0, 0, Vector2( 0.40487, 1 ), -1.882, -1.882, 0, 0, Vector2( 1, 0.0273438 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=4]
+
+flags = 4
+width = 2048
+curve = SubResource( 3 )
+
+[sub_resource type="ParticlesMaterial" id=5]
+
+render_priority = 0
+trail_divisor = 1
+emission_shape = 2
+emission_box_extents = Vector3( 4, 4, 1 )
+flag_align_y = false
+flag_rotate_y = false
+flag_disable_z = true
+spread = 45.0
+flatness = 0.0
+gravity = Vector3( -693, 693, 0 )
+initial_velocity = 300.0
+initial_velocity_random = 0.2
+angular_velocity = 0.0
+angular_velocity_random = 0.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = 0.0
+linear_accel_random = 0.0
+radial_accel = 0.0
+radial_accel_random = 0.0
+tangential_accel = 0.0
+tangential_accel_random = 0.0
+damping = 0.0
+damping_random = 0.0
+angle = 45.0
+angle_random = 0.0
+angle_curve = SubResource( 2 )
+scale = 1.0
+scale_random = 0.0
+scale_curve = SubResource( 4 )
+color = Color( 0.972656, 0.822875, 0.311554, 1 )
+hue_variation = 0.0
+hue_variation_random = 0.0
+anim_speed = 0.0
+anim_speed_random = 0.0
+anim_offset = 0.0
+anim_offset_random = 0.0
+anim_loop = false
+_sections_unfolded = [ "Angle", "Color", "Emission Shape", "Gravity", "Hue Variation", "Initial Velocity", "Scale", "Trail" ]
+
+[node name="Sparkler" type="Node2D"]
+
+z_index = 2
+script = ExtResource( 1 )
+_sections_unfolded = [ "Process Material", "Time", "Transform", "Visibility", "Z Index" ]
+
+[node name="Timer" type="Timer" parent="." index="0"]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = true
+autostart = true
+
+[node name="Visual allign" type="Sprite" parent="." index="1"]
+
+visible = false
+position = Vector2( -0.707107, -9.19239 )
+rotation = 0.785398
+scale = Vector2( 0.125, 0.125 )
+texture = ExtResource( 2 )
+offset = Vector2( 32, 32 )
+_sections_unfolded = [ "Offset", "Transform" ]
+
+[node name="Particles2D" type="Particles2D" parent="." index="2"]
+
+rotation = -0.785398
+z_index = 2
+emitting = true
+amount = 8
+lifetime = 1.0
+one_shot = false
+preprocess = 0.0
+speed_scale = 1.0
+explosiveness = 1.0
+randomness = 0.0
+fixed_fps = 0
+fract_delta = true
+visibility_rect = Rect2( -100, -100, 200, 200 )
+local_coords = true
+draw_order = 0
+process_material = SubResource( 5 )
+texture = null
+normal_map = null
+h_frames = 1
+v_frames = 1
+_sections_unfolded = [ "Process Material" ]
+
+[connection signal="timeout" from="Timer" to="." method="destroy"]
+
+
