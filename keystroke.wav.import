@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/keystroke.wav-a47633c877459b3dbc96d201952ff870.sample"
+
+[deps]
+
+source_file="res://keystroke.wav"
+dest_files=[ "res://.import/keystroke.wav-a47633c877459b3dbc96d201952ff870.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

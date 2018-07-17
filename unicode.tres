@@ -1,0 +1,14 @@
+[gd_resource type="DynamicFont" load_steps=2 format=2]
+
+[ext_resource path="res://BigBlue_TerminalPlus.TTF" type="DynamicFontData" id=1]
+
+[resource]
+
+size = 12
+use_mipmaps = false
+use_filter = false
+extra_spacing_bottom = -3
+extra_spacing_char = 1
+font_data = ExtResource( 1 )
+_sections_unfolded = [ "Extra Spacing", "Font", "Settings" ]
+
