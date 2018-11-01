@@ -1,4 +1,5 @@
-extends Node2D
+extends Control
+
 var letter = ""
 
 

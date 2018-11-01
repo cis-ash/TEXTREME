@@ -218,7 +218,10 @@ func typejerk(type):
 #custom names for keys presses or combos of such are made in [project > input map]
 func _input(event):
 	if (event is InputEventKey && event.pressed && TextEditWindow.has_focus()):
-		queue_check = true
+		if event.is_action("enter"):
+			typejerk("enter")
+		else:
+			queue_check = true
 
 func analyze_input(input):
 	if input != "":
@@ -304,7 +307,7 @@ func spawnletter(position, text):
 	StartTextPosition.add_child(cross)
 	position.y += charsize.y*0.5
 	position.x += -charsize.x*0.5
-	print(text)
+	cross.letter = text
 	cross.global_position = position + StartTextPosition.global_position
 
 func spawnhitconfirm():

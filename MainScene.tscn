@@ -10,7 +10,7 @@
 [ext_resource path="res://Sounds/keystroke.wav" type="AudioStream" id=8]
 [ext_resource path="res://Sounds/enter.wav" type="AudioStream" id=9]
 
-[node name="Base" type="CanvasLayer" index="0"]
+[node name="Base" type="CanvasLayer"]
 
 layer = 1
 offset = Vector2( 0, 0 )
@@ -563,7 +563,7 @@ autoplay = false
 mix_target = 0
 bus = "Master"
 
-[node name="StartTextPosition" type="Position2D" parent="." index="5"]
+[node name="StartTextPosition" type="Node2D" parent="." index="5"]
 
 position = Vector2( 25, 9 )
 
