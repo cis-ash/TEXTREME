@@ -53,8 +53,11 @@ func _ready():
 #runs every frame
 func _process(delta):
 	if queue_check:
-		what_added(linewas)
-		what_removed(linewas)
+		analyze_input(what_added(linewas))
+		var removed = what_removed(linewas)
+		if(removed != ""):
+			typejerk("delete")
+			spawnletter(locatecursor(), removed)
 		queue_check = false
 		
 	
@@ -192,10 +195,7 @@ func typejerk(type):
 						getColor(6), flashtimeenter, $Ding, -5, "spawnflash")
 		"delete":
 			process_key(rand_range(-PI*0.25,PI*0.25)+PI/2, keytimedelete, keyoffdelete, 
-						getColor(1), flashtimedelete, $Keystroke, -8, "spawncross", charsize*Vector2(1,0))
-		"backspace":
-			process_key(rand_range(-PI*0.25,PI*0.25)-PI/2, keytimedelete, keyoffdelete, 
-						getColor(1), flashtimedelete, $Keystroke, -8, "spawncross")
+						getColor(1), flashtimedelete, $Keystroke, -8, "nofunc", charsize*Vector2(1,0))
 		"repeat":
 			process_key(rand_range(0,TAU), 0.05, 1, 
 						getRandomColor(), 0.05, $Keystroke, -15, "spawnsparks")
@@ -219,43 +219,17 @@ func typejerk(type):
 func _input(event):
 	if (event is InputEventKey && event.pressed && TextEditWindow.has_focus()):
 		queue_check = true
-		var action = ""
-		
-		#Find what action is pressed
-		for action_name in ["space", "enter", "delete", "backspace", "exclamation", "question", "dot", "dash", "ignore"]:
-			if event.is_action(action_name):
-				action = action_name
-				break
-		
-		if action == "ignore":
-			return
-		
-		
-		if !event.is_echo() && RythmControl.isactive:
-			if RythmControl.checktiming():
-				spawnhitconfirm()
-				$EffectManager.shake(0.05,0.05,4)
-			else:
-				spawnhitfail()
-		
-		#Edge cases
-		if ["dot", ""].has(action):
-			match action:
-				"dot":
-					if !event.shift && !event.echo:
-						typejerk("dot")
-					else:
-						typejerk("other")
-				"":
-					if event.echo:
-						typejerk("repeat")
-					else:
-						typejerk("other")
-			
-			return
-		
-		
-		typejerk(action)#Everything else
+
+func analyze_input(input):
+	if input != "":
+		match input:
+			".": typejerk("dot")
+			"-": typejerk("dash")
+			"!": typejerk("exclamation")
+			"?": typejerk("question")
+			" ": typejerk("space")
+			_: typejerk("other")
+
 
 
 
@@ -325,11 +299,12 @@ func spawnquestion(position):
 	position.x += charsize.x*0.5
 	question.global_position = position + StartTextPosition.global_position
 
-func spawncross(position):
+func spawnletter(position, text):
 	var cross = preload("res://Effects\\cross.tscn").instance()
 	StartTextPosition.add_child(cross)
 	position.y += charsize.y*0.5
 	position.x += -charsize.x*0.5
+	print(text)
 	cross.global_position = position + StartTextPosition.global_position
 
 func spawnhitconfirm():
