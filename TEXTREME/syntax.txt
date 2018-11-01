@@ -1,3 +1,5 @@
-despacito2,orchid,
-anotherexample,lightcoral,
-thxseth,cyan,
+heck,lime,
+yeah,purple,
+it,lightcoral,
+does,cyan,
+!,pink

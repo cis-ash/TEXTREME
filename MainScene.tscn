@@ -129,13 +129,13 @@ _sections_unfolded = [ "Caret", "Focus", "Mouse", "Rect", "Theme" ]
 [node name="Save" type="Button" parent="UIBase" index="2"]
 
 anchor_left = 0.0
-anchor_top = 1.0
+anchor_top = 0.0
 anchor_right = 0.0
-anchor_bottom = 1.0
+anchor_bottom = 0.0
 margin_left = 6.0
-margin_top = -293.0
+margin_top = 7.0
 margin_right = 80.0
-margin_bottom = -273.0
+margin_bottom = 27.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -156,13 +156,13 @@ _sections_unfolded = [ "Theme" ]
 [node name="Save AS" type="Button" parent="UIBase" index="3"]
 
 anchor_left = 0.0
-anchor_top = 1.0
+anchor_top = 0.0
 anchor_right = 0.0
-anchor_bottom = 1.0
+anchor_bottom = 0.0
 margin_left = 86.0
-margin_top = -293.0
+margin_top = 7.0
 margin_right = 160.0
-margin_bottom = -273.0
+margin_bottom = 27.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -183,13 +183,13 @@ _sections_unfolded = [ "Theme" ]
 [node name="Load" type="Button" parent="UIBase" index="4"]
 
 anchor_left = 0.0
-anchor_top = 1.0
+anchor_top = 0.0
 anchor_right = 0.0
-anchor_bottom = 1.0
+anchor_bottom = 0.0
 margin_left = 166.0
-margin_top = -293.0
+margin_top = 7.0
 margin_right = 240.0
-margin_bottom = -273.0
+margin_bottom = 27.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -207,7 +207,62 @@ flat = false
 align = 1
 _sections_unfolded = [ "Theme" ]
 
-[node name="RhythmControl" type="Control" parent="UIBase" index="5"]
+[node name="BPMcontroller" type="SpinBox" parent="UIBase" index="5"]
+
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+margin_left = -266.0
+margin_top = 5.0
+margin_right = -132.0
+margin_bottom = 29.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+min_value = 0.0
+max_value = 3600.0
+step = 10.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = true
+editable = true
+prefix = ""
+suffix = "BPM"
+_sections_unfolded = [ "Focus", "Rect", "Theme" ]
+
+[node name="CheckBox" type="CheckBox" parent="UIBase" index="6"]
+
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+margin_left = -131.0
+margin_top = 5.0
+margin_right = 13.0
+margin_bottom = 29.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+theme = ExtResource( 3 )
+toggle_mode = true
+enabled_focus_mode = 0
+shortcut = null
+group = null
+text = "rhythm mode"
+flat = false
+align = 0
+_sections_unfolded = [ "Rect", "Theme", "custom_colors", "custom_fonts" ]
+
+[node name="RhythmControl" type="Control" parent="UIBase" index="7"]
 
 anchor_left = 0.0
 anchor_top = 1.0
@@ -294,62 +349,7 @@ position = Vector2( 138.655, 41.132 )
 texture = ExtResource( 6 )
 _sections_unfolded = [ "Z Index" ]
 
-[node name="BPMcontroller" type="SpinBox" parent="UIBase/RhythmControl" index="1"]
-
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -266.0
-margin_top = -295.0
-margin_right = -132.0
-margin_bottom = -271.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 0
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-theme = ExtResource( 3 )
-min_value = 0.0
-max_value = 3600.0
-step = 10.0
-page = 0.0
-value = 0.0
-exp_edit = false
-rounded = true
-editable = true
-prefix = ""
-suffix = "BPM"
-_sections_unfolded = [ "Focus", "Rect", "Theme" ]
-
-[node name="CheckBox" type="CheckBox" parent="UIBase/RhythmControl" index="2"]
-
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -131.0
-margin_top = -295.0
-margin_right = 13.0
-margin_bottom = -271.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 0
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-theme = ExtResource( 3 )
-toggle_mode = true
-enabled_focus_mode = 0
-shortcut = null
-group = null
-text = "rhythm mode"
-flat = false
-align = 0
-_sections_unfolded = [ "Rect", "Theme", "custom_colors", "custom_fonts" ]
-
-[node name="Metronome" type="AudioStreamPlayer" parent="UIBase/RhythmControl" index="3"]
+[node name="Metronome" type="AudioStreamPlayer" parent="UIBase/RhythmControl" index="1"]
 
 stream = ExtResource( 7 )
 volume_db = -10.0
@@ -358,14 +358,14 @@ autoplay = false
 mix_target = 0
 bus = "Master"
 
-[node name="Metronometimer" type="Timer" parent="UIBase/RhythmControl" index="4"]
+[node name="Metronometimer" type="Timer" parent="UIBase/RhythmControl" index="2"]
 
 process_mode = 1
 wait_time = 4096.0
 one_shot = false
 autostart = true
 
-[node name="SaveDialog" type="WindowDialog" parent="UIBase" index="6"]
+[node name="SaveDialog" type="WindowDialog" parent="UIBase" index="8"]
 
 editor/display_folded = true
 visible = false
@@ -465,7 +465,7 @@ flat = false
 align = 1
 _sections_unfolded = [ "Theme" ]
 
-[node name="LoadDialog" type="WindowDialog" parent="UIBase" index="7"]
+[node name="LoadDialog" type="WindowDialog" parent="UIBase" index="9"]
 
 editor/display_folded = true
 visible = false
@@ -602,9 +602,9 @@ texture = ExtResource( 10 )
 
 [connection signal="pressed" from="UIBase/Load" to="." method="_on_Load_pressed"]
 
-[connection signal="value_changed" from="UIBase/RhythmControl/BPMcontroller" to="UIBase/RhythmControl" method="_on_BPMcontroller_value_changed"]
+[connection signal="value_changed" from="UIBase/BPMcontroller" to="UIBase/RhythmControl" method="_on_BPMcontroller_value_changed"]
 
-[connection signal="toggled" from="UIBase/RhythmControl/CheckBox" to="UIBase/RhythmControl" method="_on_CheckBox_toggled"]
+[connection signal="toggled" from="UIBase/CheckBox" to="UIBase/RhythmControl" method="_on_CheckBox_toggled"]
 
 [connection signal="timeout" from="UIBase/RhythmControl/Metronometimer" to="UIBase/RhythmControl" method="_on_Metronometimer_timeout"]
 

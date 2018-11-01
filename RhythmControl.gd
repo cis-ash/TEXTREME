@@ -49,7 +49,7 @@ func _on_BPMcontroller_value_changed(value):
 		isactive = false
 	else:
 		$Metronome.volume_db = metronomevolume
-		isactive = $CheckBox.pressed
+		isactive = get_parent().get_node("CheckBox").pressed
 		$Metronometimer.stop()
 		$Metronometimer.wait_time = 60/value
 		$Metronometimer.start()
@@ -67,9 +67,9 @@ func _on_Metronometimer_timeout():
 
 #activates/deactivates the beatsliders
 func _on_CheckBox_toggled(button_pressed):
-	if $BPMcontroller.value != 0:
+	if get_parent().get_node("BPMcontroller").value != 0:
 		isactive = button_pressed
-		timepertick = 60/$BPMcontroller.value
+		timepertick = 60/get_parent().get_node("BPMcontroller").value
 	else:
 		isactive = false
 	pass
