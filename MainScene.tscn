@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Base.gd" type="Script" id=1]
 [ext_resource path="res://EffectManager.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Sounds/250551__druminfected__metronomeup.wav" type="AudioStream" id=7]
 [ext_resource path="res://Sounds/keystroke.wav" type="AudioStream" id=8]
 [ext_resource path="res://Sounds/enter.wav" type="AudioStream" id=9]
+[ext_resource path="res://icon.png" type="Texture" id=10]
 
 [node name="Base" type="CanvasLayer" index="0"]
 
@@ -94,9 +95,9 @@ anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 7.0
-margin_top = 6.0
+margin_top = 32.0
 margin_right = -5.0
-margin_bottom = -78.0
+margin_bottom = -8.0
 grow_horizontal = 0
 grow_vertical = 0
 rect_pivot_offset = Vector2( 0, 0 )
@@ -107,7 +108,7 @@ mouse_default_cursor_shape = 3
 size_flags_horizontal = 1
 size_flags_vertical = 1
 theme = ExtResource( 3 )
-text = ""
+text = "X"
 readonly = false
 highlight_current_line = true
 syntax_highlighting = true
@@ -131,10 +132,10 @@ anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 0.0
 anchor_bottom = 1.0
-margin_left = 7.0
-margin_top = -74.0
-margin_right = 81.0
-margin_bottom = -54.0
+margin_left = 6.0
+margin_top = -293.0
+margin_right = 80.0
+margin_bottom = -273.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -158,10 +159,10 @@ anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 0.0
 anchor_bottom = 1.0
-margin_left = 7.0
-margin_top = -50.0
-margin_right = 81.0
-margin_bottom = -30.0
+margin_left = 86.0
+margin_top = -293.0
+margin_right = 160.0
+margin_bottom = -273.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -185,10 +186,10 @@ anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 0.0
 anchor_bottom = 1.0
-margin_left = 7.0
-margin_top = -26.0
-margin_right = 81.0
-margin_bottom = -6.0
+margin_left = 166.0
+margin_top = -293.0
+margin_right = 240.0
+margin_bottom = -273.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -208,13 +209,10 @@ _sections_unfolded = [ "Theme" ]
 
 [node name="RhythmControl" type="Control" parent="UIBase" index="5"]
 
-editor/display_folded = true
 anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 94.0
-margin_top = -74.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 0
@@ -227,15 +225,15 @@ metronomevolume = -15
 
 [node name="Beatslider" type="Control" parent="UIBase/RhythmControl" index="0"]
 
-editor/display_folded = true
 anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -74.0
-margin_right = -156.0
+margin_left = 5.0
+margin_top = -40.0
+margin_right = -7.0
 margin_bottom = -6.0
-rect_min_size = Vector2( 262, 68 )
+rect_min_size = Vector2( 262, 34 )
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 0
@@ -244,7 +242,23 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 _sections_unfolded = [ "Anchor", "Rect", "Visibility" ]
 
-[node name="right" type="Position2D" parent="UIBase/RhythmControl/Beatslider" index="0"]
+[node name="ColorRect" type="ColorRect" parent="UIBase/RhythmControl/Beatslider" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+color = Color( 0.121569, 0.121569, 0.121569, 1 )
+
+[node name="right" type="Position2D" parent="UIBase/RhythmControl/Beatslider" index="1"]
+
+position = Vector2( 137.328, 45.776 )
 
 [node name="slider1" type="Sprite" parent="UIBase/RhythmControl/Beatslider/right" index="0"]
 
@@ -256,7 +270,9 @@ _sections_unfolded = [ "Visibility", "Z Index" ]
 texture = ExtResource( 5 )
 _sections_unfolded = [ "Z Index" ]
 
-[node name="left" type="Position2D" parent="UIBase/RhythmControl/Beatslider" index="1"]
+[node name="left" type="Position2D" parent="UIBase/RhythmControl/Beatslider" index="2"]
+
+position = Vector2( 139.318, 44.4492 )
 
 [node name="slider1" type="Sprite" parent="UIBase/RhythmControl/Beatslider/left" index="0"]
 
@@ -265,10 +281,13 @@ _sections_unfolded = [ "Z Index" ]
 
 [node name="slider2" type="Sprite" parent="UIBase/RhythmControl/Beatslider/left" index="1"]
 
+position = Vector2( 141.972, 44.4492 )
 texture = ExtResource( 5 )
 _sections_unfolded = [ "Z Index" ]
 
-[node name="center" type="Position2D" parent="UIBase/RhythmControl/Beatslider" index="2"]
+[node name="center" type="Position2D" parent="UIBase/RhythmControl/Beatslider" index="3"]
+
+position = Vector2( 138.655, 41.132 )
 
 [node name="target" type="Sprite" parent="UIBase/RhythmControl/Beatslider/center" index="0"]
 
@@ -281,10 +300,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -142.0
-margin_top = -31.0
-margin_right = -8.0
-margin_bottom = -7.0
+margin_left = -266.0
+margin_top = -295.0
+margin_right = -132.0
+margin_bottom = -271.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 0
@@ -302,7 +321,7 @@ rounded = true
 editable = true
 prefix = ""
 suffix = "BPM"
-_sections_unfolded = [ "Focus", "Theme" ]
+_sections_unfolded = [ "Focus", "Rect", "Theme" ]
 
 [node name="CheckBox" type="CheckBox" parent="UIBase/RhythmControl" index="2"]
 
@@ -310,10 +329,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -151.0
-margin_top = -64.0
-margin_right = -7.0
-margin_bottom = -40.0
+margin_left = -131.0
+margin_top = -295.0
+margin_right = 13.0
+margin_bottom = -271.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 0
@@ -325,7 +344,7 @@ toggle_mode = true
 enabled_focus_mode = 0
 shortcut = null
 group = null
-text = "Enable rhythm"
+text = "rhythm mode"
 flat = false
 align = 0
 _sections_unfolded = [ "Rect", "Theme", "custom_colors", "custom_fonts" ]
@@ -566,7 +585,13 @@ bus = "Master"
 
 [node name="StartTextPosition" type="Position2D" parent="." index="5"]
 
-position = Vector2( 25, 9 )
+position = Vector2( 26, 35 )
+
+[node name="Cursor" type="Sprite" parent="StartTextPosition" index="0"]
+
+position = Vector2( 156.87, 42.3662 )
+scale = Vector2( 0.48077, 0.501835 )
+texture = ExtResource( 10 )
 
 [connection signal="pressed" from="UIBase/Save" to="." method="_on_Save_pressed"]
 

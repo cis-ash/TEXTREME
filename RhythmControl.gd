@@ -43,6 +43,7 @@ func _process(delta):
 
 #triggers every time the metronome value is changed
 func _on_BPMcontroller_value_changed(value):
+	get_parent().get_node("TextEdit").grab_focus()
 	if value == 0:
 		$Metronome.volume_db = -100
 		isactive = false

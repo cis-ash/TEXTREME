@@ -20,8 +20,11 @@ export var flashtimedelete = 0.2
 export var charsize = Vector2(8.0,8.0)
 
 #no toucch
+var lineafter = ""
 var lastlineheight = 0
-
+var linebefore = ""
+var y_was = 0
+var queue_check = false
 #basic colors for misc use. the only really important ones are black and white
 const cyan = Color(0,1,1,1)
 const magenta = Color(1,0,1,1)
@@ -45,11 +48,25 @@ onready var RythmControl = $UIBase/RhythmControl
 func _ready():
 	TextEditWindow.grab_focus()
 	loadsyntax()
+	
 	pass
 
 #runs every frame
-#func _process(delta):
-#	pass
+func _process(delta):
+	if queue_check:
+		lineafter = TextEditWindow.get_line(TextEditWindow.cursor_get_line())
+		var removed = what_removed(linebefore)
+		if(removed != ""):
+			typejerk("delete")
+			spawnletter(locatecursor(), removed)
+		analyze_input(what_added(linebefore))
+		queue_check = false
+		linebefore = lineafter
+	
+	$StartTextPosition/Cursor.position = locatecursor()
+	
+	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
+	y_was = TextEditWindow.cursor_get_line()
 
 func getColor(idx):
 	return ColorN(colors[idx], 1)
@@ -182,10 +199,7 @@ func typejerk(type):
 						getColor(6), flashtimeenter, $Ding, -5, "spawnflash")
 		"delete":
 			process_key(rand_range(-PI*0.25,PI*0.25)+PI/2, keytimedelete, keyoffdelete, 
-						getColor(1), flashtimedelete, $Keystroke, -8, "spawncross", charsize*Vector2(1,0))
-		"backspace":
-			process_key(rand_range(-PI*0.25,PI*0.25)-PI/2, keytimedelete, keyoffdelete, 
-						getColor(1), flashtimedelete, $Keystroke, -8, "spawncross")
+						getColor(1), flashtimedelete, $Keystroke, -8, "nofunc", charsize*Vector2(1,0))
 		"repeat":
 			process_key(rand_range(0,TAU), 0.05, 1, 
 						getRandomColor(), 0.05, $Keystroke, -15, "spawnsparks")
@@ -208,44 +222,27 @@ func typejerk(type):
 #custom names for keys presses or combos of such are made in [project > input map]
 func _input(event):
 	if (event is InputEventKey && event.pressed && TextEditWindow.has_focus()):
+		if event.is_action("enter"):
+			typejerk("enter")
+		else:
+			queue_check = true
 		
-		var action = ""
-		
-		#Find what action is pressed
-		for action_name in ["space", "enter", "delete", "backspace", "exclamation", "question", "dot", "dash", "ignore"]:
-			if event.is_action(action_name):
-				action = action_name
-				break
-		
-		if action == "ignore":
-			return
-		
-		
-		if !event.is_echo() && RythmControl.isactive:
-			if RythmControl.checktiming():
+		if $UIBase/RhythmControl.isactive:
+			if $UIBase/RhythmControl.checktiming():
 				spawnhitconfirm()
-				$EffectManager.shake(0.05,0.05,4)
 			else:
 				spawnhitfail()
-		
-		#Edge cases
-		if ["dot", ""].has(action):
-			match action:
-				"dot":
-					if !event.shift && !event.echo:
-						typejerk("dot")
-					else:
-						typejerk("other")
-				"":
-					if event.echo:
-						typejerk("repeat")
-					else:
-						typejerk("other")
-			
-			return
-		
-		
-		typejerk(action)#Everything else
+
+func analyze_input(input):
+	if input != "":
+		match input:
+			".": typejerk("dot")
+			"-": typejerk("dash")
+			"!": typejerk("exclamation")
+			"?": typejerk("question")
+			" ": typejerk("space")
+			_: typejerk("other")
+
 
 
 
@@ -255,15 +252,16 @@ func _input(event):
 func locatecursor():
 	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,
 							TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
-	var linetext = TextEditWindow.get_line(cursorpos.y)
+	var linetext = TextEditWindow.get_line(TextEditWindow.cursor_get_line())
 	
 	linetext = linetext.left(TextEditWindow.cursor_get_column())
-	
+	print(cursorpos.x)
 	#"\t" is basically TAB, this is a fix that counts tab as 4 characters instead of 1
 	while linetext.find("\t",0) != -1:
 		linetext.erase(linetext.find("\t",0), 1)
 		cursorpos.x +=3
-	
+		print(cursorpos.x)
+	print("---")
 	cursorpos *= charsize
 	if lastlineheight < TextEditWindow.get_child(1).value:
 		lastlineheight = TextEditWindow.get_child(1).value
@@ -315,11 +313,12 @@ func spawnquestion(position):
 	position.x += charsize.x*0.5
 	question.global_position = position + StartTextPosition.global_position
 
-func spawncross(position):
+func spawnletter(position, text):
 	var cross = preload("res://Effects\\cross.tscn").instance()
 	StartTextPosition.add_child(cross)
 	position.y += charsize.y*0.5
 	position.x += -charsize.x*0.5
+	cross.letter = text
 	cross.global_position = position + StartTextPosition.global_position
 
 func spawnhitconfirm():
@@ -335,3 +334,32 @@ func spawnhitfail():
 	fail.global_position = RythmControl.get_node("Beatslider/center").global_position
 	fail.scale = RythmControl.rect_scale
 	fail.modulate = RythmControl.modulate
+
+func what_added(linebefore):
+	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
+	
+	if linebefore.is_subsequence_of(lineafter) && !lineafter.is_subsequence_of(linebefore) && y_was == TextEditWindow.cursor_get_line():
+		if lineafter.length() <= 0:
+			print("i fucked up")
+			return ""
+		elif lineafter.length() == 1:
+			return lineafter
+		else:
+			return lineafter[TextEditWindow.cursor_get_column()-1]
+	else:
+		return ""
+		
+
+func what_removed(linebefore):
+	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
+	
+	if lineafter.is_subsequence_of(linebefore) && !linebefore.is_subsequence_of(lineafter) && y_was == TextEditWindow.cursor_get_line():
+		if linebefore.length() == 1:
+			return linebefore
+		else:
+			return linebefore[TextEditWindow.cursor_get_column()]
+		print("DETECTO DELETUS")
+	else:
+		return ""
+	
+	
