@@ -20,8 +20,10 @@ export var flashtimedelete = 0.2
 export var charsize = Vector2(8.0,8.0)
 
 #no toucch
+var lineafter = ""
 var lastlineheight = 0
-var linewas = ""
+var linebefore = ""
+var y_was = 0
 var queue_check = false
 #basic colors for misc use. the only really important ones are black and white
 const cyan = Color(0,1,1,1)
@@ -46,23 +48,25 @@ onready var RythmControl = $UIBase/RhythmControl
 func _ready():
 	TextEditWindow.grab_focus()
 	loadsyntax()
-	#print("12345h6"[1])
 	
 	pass
 
 #runs every frame
 func _process(delta):
 	if queue_check:
-		analyze_input(what_added(linewas))
-		var removed = what_removed(linewas)
+		lineafter = TextEditWindow.get_line(TextEditWindow.cursor_get_line())
+		var removed = what_removed(linebefore)
 		if(removed != ""):
 			typejerk("delete")
 			spawnletter(locatecursor(), removed)
+		analyze_input(what_added(linebefore))
 		queue_check = false
-		
+		linebefore = lineafter
+	
+	$StartTextPosition/Cursor.position = locatecursor()
 	
 	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
-	linewas = TextEditWindow.get_line(cursorpos.y)
+	y_was = TextEditWindow.cursor_get_line()
 
 func getColor(idx):
 	return ColorN(colors[idx], 1)
@@ -222,6 +226,12 @@ func _input(event):
 			typejerk("enter")
 		else:
 			queue_check = true
+		
+		if $UIBase/RhythmControl.isactive:
+			if $UIBase/RhythmControl.checktiming():
+				spawnhitconfirm()
+			else:
+				spawnhitfail()
 
 func analyze_input(input):
 	if input != "":
@@ -242,15 +252,16 @@ func analyze_input(input):
 func locatecursor():
 	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,
 							TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
-	var linetext = TextEditWindow.get_line(cursorpos.y)
+	var linetext = TextEditWindow.get_line(TextEditWindow.cursor_get_line())
 	
 	linetext = linetext.left(TextEditWindow.cursor_get_column())
-	
+	print(cursorpos.x)
 	#"\t" is basically TAB, this is a fix that counts tab as 4 characters instead of 1
 	while linetext.find("\t",0) != -1:
 		linetext.erase(linetext.find("\t",0), 1)
 		cursorpos.x +=3
-	
+		print(cursorpos.x)
+	print("---")
 	cursorpos *= charsize
 	if lastlineheight < TextEditWindow.get_child(1).value:
 		lastlineheight = TextEditWindow.get_child(1).value
@@ -326,27 +337,29 @@ func spawnhitfail():
 
 func what_added(linebefore):
 	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
-	var lineafter = TextEditWindow.get_line(cursorpos.y)
 	
-	if linebefore.is_subsequence_of(lineafter) && !lineafter.is_subsequence_of(linebefore):
+	if linebefore.is_subsequence_of(lineafter) && !lineafter.is_subsequence_of(linebefore) && y_was == TextEditWindow.cursor_get_line():
 		if lineafter.length() <= 0:
 			print("i fucked up")
 			return ""
 		elif lineafter.length() == 1:
 			return lineafter
 		else:
-			return lineafter[cursorpos.x-1]
+			return lineafter[TextEditWindow.cursor_get_column()-1]
 	else:
 		return ""
+		
 
 func what_removed(linebefore):
 	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
-	var lineafter = TextEditWindow.get_line(cursorpos.y)
 	
-	if lineafter.is_subsequence_of(linebefore) && !linebefore.is_subsequence_of(lineafter):
+	if lineafter.is_subsequence_of(linebefore) && !linebefore.is_subsequence_of(lineafter) && y_was == TextEditWindow.cursor_get_line():
 		if linebefore.length() == 1:
 			return linebefore
 		else:
-			return linebefore[cursorpos.x]
+			return linebefore[TextEditWindow.cursor_get_column()]
+		print("DETECTO DELETUS")
 	else:
 		return ""
+	
+	
