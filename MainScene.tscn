@@ -589,6 +589,7 @@ position = Vector2( 26, 35 )
 
 [node name="Cursor" type="Sprite" parent="StartTextPosition" index="0"]
 
+visible = false
 position = Vector2( 156.87, 42.3662 )
 scale = Vector2( 0.48077, 0.501835 )
 texture = ExtResource( 10 )
