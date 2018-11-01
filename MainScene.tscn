@@ -208,7 +208,6 @@ _sections_unfolded = [ "Theme" ]
 
 [node name="RhythmControl" type="Control" parent="UIBase" index="5"]
 
-editor/display_folded = true
 anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 1.0

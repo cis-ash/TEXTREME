@@ -21,7 +21,7 @@ export var charsize = Vector2(8.0,8.0)
 
 #no toucch
 var lastlineheight = 0
-
+var linewas = ""
 #basic colors for misc use. the only really important ones are black and white
 const cyan = Color(0,1,1,1)
 const magenta = Color(1,0,1,1)
@@ -45,6 +45,8 @@ onready var RythmControl = $UIBase/RhythmControl
 func _ready():
 	TextEditWindow.grab_focus()
 	loadsyntax()
+	print("12345h6"[1])
+	
 	pass
 
 #runs every frame
@@ -208,7 +210,9 @@ func typejerk(type):
 #custom names for keys presses or combos of such are made in [project > input map]
 func _input(event):
 	if (event is InputEventKey && event.pressed && TextEditWindow.has_focus()):
-		
+		what_added(linewas)
+		linewas = $UIBase/TextEdit.get_line(cursorpos.y)
+		print(linewas)
 		var action = ""
 		
 		#Find what action is pressed
@@ -335,3 +339,17 @@ func spawnhitfail():
 	fail.global_position = RythmControl.get_node("Beatslider/center").global_position
 	fail.scale = RythmControl.rect_scale
 	fail.modulate = RythmControl.modulate
+
+func what_added(linebefore):
+	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,
+							TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
+	var lineafter = TextEditWindow.get_line(cursorpos.y)
+	
+	if linebefore.is_subsequence_of(lineafter):
+		
+		if (cursorpos.x <= lineafter.length()) && lineafter != "":
+			print(lineafter[cursorpos.x-1])
+		
+		
+	else:
+		return ""
