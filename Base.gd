@@ -93,15 +93,14 @@ func loadsyntax():
 		printerr("Failed to load custom syntax!")
 		TextEditWindow.text = "Failed to load custom syntax!"
 		return
-	
-	var infoarray = info.get_csv_line()
-	
-	while infoarray.size() != 0:
-		
+
+	while !info.eof_reached():
+		var infoarray = info.get_csv_line()
 		if infoarray.size() >= 2:
-			TextEditWindow.add_keyword_color(infoarray[0], ColorN(infoarray[1],1))
-		
+			TextEditWindow.add_keyword_color(infoarray[0], ColorN(infoarray[1], 1))
 		infoarray = info.get_csv_line()
+
+	info.close()
 
 
 func _on_Load_pressed():
