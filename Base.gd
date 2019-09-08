@@ -113,11 +113,11 @@ func save(text,fname):
 	savename = fname
 	var file = File.new()
 	
-	var baseFolder = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS) + "\\TEXTREME"
+	var baseFolder = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS) + "\/TEXTREME"
 	
 	Directory.new().make_dir(baseFolder)
 	
-	file.open(baseFolder + "\\" + fname + ".txt", file.WRITE)
+	file.open(baseFolder + "\/" + fname + ".txt", file.WRITE)
 	
 	if !file.is_open():
 		printerr("Failed to save the file!")
@@ -129,9 +129,9 @@ func save(text,fname):
 func lload(fname):
 	var file = File.new()
 	
-	var baseFolder = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS) + "\\TEXTREME"
+	var baseFolder = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS) + "\/TEXTREME"
 	
-	file.open(baseFolder + "\\" + fname + ".txt", file.READ)
+	file.open(baseFolder + "\/" + fname + ".txt", file.READ)
 	var content = file.get_as_text()
 	
 	if !file.is_open():
