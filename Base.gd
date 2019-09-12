@@ -36,6 +36,7 @@ var colors = ["cyan","magenta","orchid", "pink", "orangered", "dodgerblue", "ora
 
 var savename = ""
 var saved = false
+var file_ext
 
 onready var TextEditWindow = $UIBase/TextEdit
 onready var LoadDialog = $UIBase/LoadDialog
@@ -47,7 +48,7 @@ onready var RythmControl = $UIBase/RhythmControl
 #runs on boot up, basic setup
 func _ready():
 	TextEditWindow.grab_focus()
-	loadsyntax()
+	TextEditWindow.text = ""
 	
 	pass
 
@@ -64,8 +65,6 @@ func _process(delta):
 		linebefore = lineafter
 	
 	$StartTextPosition/Cursor.position = locatecursor()
-	
-	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
 	y_was = TextEditWindow.cursor_get_line()
 
 func getColor(idx):
@@ -80,27 +79,22 @@ func getRandomColor():
 #if you dont want the user to acces this file add it to the games folder and replace the OS.get_exec.. with a "res://" then add filename
 func loadsyntax():
 	var info = File.new()
-	
+	TextEditWindow.clear_colors()
 	var baseExecFolder = OS.get_executable_path().get_base_dir()
-	
-	#In-editor load from project folder
-	if OS.has_feature("debug"):
-		baseExecFolder = "res://TEXTREME"
-	
-	info.open(baseExecFolder + "\\syntax.txt", info.READ)
+	info.open(baseExecFolder + "\\Syntax\\{ext}-syntax.txt".format({"ext":file_ext}), info.READ)
 	
 	if !info.is_open():
 		printerr("Failed to load custom syntax!")
 		TextEditWindow.text = "Failed to load custom syntax!"
 		return
-
+		
 	while !info.eof_reached():
 		var infoarray = info.get_csv_line()
 		if infoarray.size() >= 2:
-			TextEditWindow.add_keyword_color(infoarray[0], ColorN(infoarray[1], 1))
-		infoarray = info.get_csv_line()
-
+			TextEditWindow.add_keyword_color(infoarray[0], Color(infoarray[1]))
+	
 	info.close()
+		
 
 
 func _on_Load_pressed():
@@ -112,33 +106,30 @@ func _on_Load_pressed():
 func save(text,fname):
 	savename = fname
 	var file = File.new()
-	
-	var baseFolder = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS) + "\/TEXTREME"
-	
-	Directory.new().make_dir(baseFolder)
-	
-	file.open(baseFolder + "\/" + fname + ".txt", file.WRITE)
+	file.open(fname, file.WRITE)
 	
 	if !file.is_open():
 		printerr("Failed to save the file!")
 		return
 	
+	file_ext = fname.get_extension()
 	file.store_string(text)
 	file.close()
+	loadsyntax()
 
 func lload(fname):
 	var file = File.new()
 	
-	var baseFolder = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS) + "\/TEXTREME"
-	
-	file.open(baseFolder + "\/" + fname + ".txt", file.READ)
+	file.open(fname, file.READ)
 	var content = file.get_as_text()
 	
 	if !file.is_open():
 		printerr("Failed to open the file!")
 		return "Failed to open the file!"
 	
+	file_ext = fname.get_extension()
 	file.close()
+	loadsyntax()
 	return content
 
 #When save dialog is confirmed
@@ -147,6 +138,7 @@ func _on_SaveButton_pressed():
 	savename = SaveDialog.get_node("LineEdit").text
 	save(TextEditWindow.text, savename)
 	saved = true
+	
 	TextEditWindow.grab_focus()
 	pass
 
@@ -254,13 +246,10 @@ func locatecursor():
 	var linetext = TextEditWindow.get_line(TextEditWindow.cursor_get_line())
 	
 	linetext = linetext.left(TextEditWindow.cursor_get_column())
-	print(cursorpos.x)
 	#"\t" is basically TAB, this is a fix that counts tab as 4 characters instead of 1
 	while linetext.find("\t",0) != -1:
 		linetext.erase(linetext.find("\t",0), 1)
 		cursorpos.x +=3
-		print(cursorpos.x)
-	print("---")
 	cursorpos *= charsize
 	if lastlineheight < TextEditWindow.get_child(1).value:
 		lastlineheight = TextEditWindow.get_child(1).value
@@ -334,9 +323,7 @@ func spawnhitfail():
 	fail.scale = RythmControl.rect_scale
 	fail.modulate = RythmControl.modulate
 
-func what_added(linebefore):
-	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
-	
+func what_added(linebefore):	
 	if linebefore.is_subsequence_of(lineafter) && !lineafter.is_subsequence_of(linebefore) && y_was == TextEditWindow.cursor_get_line():
 		if lineafter.length() <= 0:
 			print("i fucked up")
@@ -357,7 +344,6 @@ func what_removed(linebefore):
 			return linebefore
 		else:
 			return linebefore[TextEditWindow.cursor_get_column()]
-		print("DETECTO DELETUS")
 	else:
 		return ""
 	
