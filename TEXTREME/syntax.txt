@@ -1,5 +1,0 @@
-heck,lime,
-yeah,purple,
-it,lightcoral,
-does,cyan,
-!,pink
