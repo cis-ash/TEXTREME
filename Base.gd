@@ -49,9 +49,9 @@ onready var RythmControl = $UIBase/RhythmControl
 func _ready():
 	var config = get_node("/root/config")
 	var font = TextEditWindow.get_font("", "")
-	font.size = config.get_setting("text", "size")
+	font.size = int(abs(config.get_setting("text", "size")))
+	print(font.size)
 	TextEditWindow.grab_focus()
-	TextEditWindow.text = ""
 	
 	
 	pass

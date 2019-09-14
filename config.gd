@@ -1,6 +1,5 @@
 extends Node
 
-
 const LOAD_PATH = "config.cfg"
 
 var _config_file = ConfigFile.new()
