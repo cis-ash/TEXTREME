@@ -70,6 +70,8 @@ func _process(delta):
 	
 	$StartTextPosition/Cursor.position = locatecursor()
 	y_was = TextEditWindow.cursor_get_line()
+	var line = TextEditWindow.get_line_count()
+	TextEditWindow.cursor_set_line(line)
 
 func getColor(idx):
 	return ColorN(colors[idx], 1)
