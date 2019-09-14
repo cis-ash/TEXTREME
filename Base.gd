@@ -47,8 +47,12 @@ onready var RythmControl = $UIBase/RhythmControl
 
 #runs on boot up, basic setup
 func _ready():
+	var config = get_node("/root/config")
+	var font = TextEditWindow.get_font("", "")
+	font.size = config.get_setting("text", "size")
 	TextEditWindow.grab_focus()
 	TextEditWindow.text = ""
+	
 	
 	pass
 
@@ -81,6 +85,11 @@ func loadsyntax():
 	var info = File.new()
 	TextEditWindow.clear_colors()
 	var baseExecFolder = OS.get_executable_path().get_base_dir()
+	
+	#In-editor load from project folder
+	if OS.has_feature("debug"):
+		baseExecFolder = "res://TEXTREME"
+	
 	info.open(baseExecFolder + "\\Syntax\\{ext}-syntax.txt".format({"ext":file_ext}), info.READ)
 	
 	if !info.is_open():
