@@ -70,8 +70,8 @@ func _process(delta):
 	
 	$StartTextPosition/Cursor.position = locatecursor()
 	y_was = TextEditWindow.cursor_get_line()
-	var line = TextEditWindow.get_line_count()
-	TextEditWindow.cursor_set_line(line)
+	#var line = TextEditWindow.get_line_count()
+	#TextEditWindow.cursor_set_line(line)
 
 func getColor(idx):
 	return ColorN(colors[idx], 1)
@@ -92,7 +92,7 @@ func loadsyntax():
 	if OS.has_feature("debug"):
 		baseExecFolder = "res://TEXTREME"
 	
-	info.open(baseExecFolder + "\\Syntax\\{ext}-syntax.txt".format({"ext":file_ext}), info.READ)
+	info.open(baseExecFolder + "/Syntax/{ext}-syntax.txt".format({"ext":file_ext}), info.READ)
 	
 	if !info.is_open():
 		printerr("Failed to load custom syntax!")
