@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/FieldDialog/FieldDialog.gd" type="Script" id=1]
+[ext_resource path="res://Theme.tres" type="Theme" id=2]
+
+[node name="SaveDialog" type="WindowDialog"]
+visible = true
+margin_left = 74.0
+margin_top = 227.0
+margin_right = 228.0
+margin_bottom = 298.0
+rect_min_size = Vector2( 154, 71 )
+script = ExtResource( 1 )
+
+[node name="LineEdit" type="LineEdit" parent="."]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 3.0
+margin_top = -14.5
+margin_right = -3.0
+margin_bottom = 9.5
+theme = ExtResource( 2 )
+context_menu_enabled = false
+caret_blink = true
+
+[node name="Label" type="Label" parent="."]
+anchor_right = 1.0
+margin_bottom = 17.0
+theme = ExtResource( 2 )
+text = "Name your file!"
+align = 1
+valign = 1
+
+[node name="ConfirmButton" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 3.0
+margin_top = -22.0
+margin_right = -3.0
+margin_bottom = -3.0
+theme = ExtResource( 2 )
+text = "Save my text"

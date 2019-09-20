@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Base.gd" type="Script" id=1]
 [ext_resource path="res://EffectManager.gd" type="Script" id=2]
@@ -7,10 +7,11 @@
 [ext_resource path="res://Sprites/slider.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/target.png" type="Texture" id=6]
 [ext_resource path="res://Sounds/250551__druminfected__metronomeup.wav" type="AudioStream" id=7]
-[ext_resource path="res://Fonts/unicode.tres" type="DynamicFont" id=8]
-[ext_resource path="res://Sounds/keystroke.wav" type="AudioStream" id=9]
-[ext_resource path="res://Sounds/enter.wav" type="AudioStream" id=10]
-[ext_resource path="res://icon.png" type="Texture" id=11]
+[ext_resource path="res://Scenes/FieldDialog/FieldDialog.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Fonts/unicode.tres" type="DynamicFont" id=9]
+[ext_resource path="res://Sounds/keystroke.wav" type="AudioStream" id=10]
+[ext_resource path="res://Sounds/enter.wav" type="AudioStream" id=11]
+[ext_resource path="res://icon.png" type="Texture" id=12]
 
 [sub_resource type="Theme" id=1]
 resource_local_to_scene = true
@@ -58,6 +59,7 @@ theme = ExtResource( 3 )
 highlight_current_line = true
 syntax_highlighting = true
 show_line_numbers = true
+context_menu_enabled = false
 caret_block_mode = true
 caret_blink = true
 caret_blink_speed = 0.5
@@ -165,68 +167,29 @@ volume_db = -10.0
 wait_time = 4096.0
 autostart = true
 
-[node name="SaveDialog" type="WindowDialog" parent="UIBase"]
-margin_left = 74.0
-margin_top = 227.0
-margin_right = 228.0
-margin_bottom = 298.0
-rect_min_size = Vector2( 154, 71 )
+[node name="SaveDialog" parent="UIBase" instance=ExtResource( 8 )]
+visible = true
+margin_left = 59.0316
+margin_top = 79.7104
+margin_right = 213.032
+margin_bottom = 150.71
+query_text = "Name your file!"
+button_text = "Save my text"
+characters = "/\\|<>:?*&^%$#@`~\"'"
+forbidden_texts = PoolStringArray( "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "COM0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9", "LPT0", "PRN", "NUL", "AUX", "NUL" )
+max_characters = 15
 
-[node name="LineEdit" type="LineEdit" parent="UIBase/SaveDialog"]
-margin_left = 3.0
-margin_top = 18.0
-margin_right = 150.0
-margin_bottom = 43.0
-theme = ExtResource( 3 )
-caret_blink = true
-
-[node name="Label" type="Label" parent="UIBase/SaveDialog"]
-margin_left = 16.0
-margin_top = 5.0
-margin_right = 136.0
-margin_bottom = 19.0
-theme = ExtResource( 3 )
-text = "Name your file!"
-
-[node name="SaveButton" type="Button" parent="UIBase/SaveDialog"]
-margin_left = 3.0
-margin_top = 47.0
-margin_right = 152.0
-margin_bottom = 67.0
-theme = ExtResource( 3 )
-text = "Save my text"
-
-[node name="LoadDialog" type="WindowDialog" parent="UIBase"]
-editor/display_folded = true
-margin_left = 74.0
-margin_top = 227.0
-margin_right = 228.0
-margin_bottom = 298.0
-rect_min_size = Vector2( 154, 71 )
-
-[node name="LineEdit" type="LineEdit" parent="UIBase/LoadDialog"]
-margin_left = 3.0
-margin_top = 18.0
-margin_right = 150.0
-margin_bottom = 43.0
-theme = ExtResource( 3 )
-caret_blink = true
-
-[node name="Label" type="Label" parent="UIBase/LoadDialog"]
-margin_left = 31.0
-margin_top = 5.0
-margin_right = 151.0
-margin_bottom = 19.0
-theme = ExtResource( 3 )
-text = "Which file?"
-
-[node name="LoadButton" type="Button" parent="UIBase/LoadDialog"]
-margin_left = 3.0
-margin_top = 47.0
-margin_right = 152.0
-margin_bottom = 67.0
-theme = ExtResource( 3 )
-text = "Load this file"
+[node name="LoadDialog" parent="UIBase" instance=ExtResource( 8 )]
+visible = true
+margin_left = 293.737
+margin_top = 55.7609
+margin_right = 447.737
+margin_bottom = 126.761
+query_text = "Which file?"
+button_text = "Load this file"
+characters = "/\\|<>:?*&^%$#@`~\"'"
+forbidden_texts = PoolStringArray( "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "COM0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9", "LPT0", "PRN", "NUL", "AUX", "NUL" )
+max_characters = 15
 
 [node name="Label" type="Label" parent="UIBase"]
 anchor_left = 0.5
@@ -236,7 +199,7 @@ anchor_bottom = 1.0
 margin_left = -229.5
 margin_top = -14.0
 margin_right = 229.5
-custom_fonts/font = ExtResource( 8 )
+custom_fonts/font = ExtResource( 9 )
 text = "F1:Save F2:save AS f3:load f4:set bpm f5 line wrap "
 uppercase = true
 
@@ -246,17 +209,17 @@ margin_left = 1.0
 margin_top = 4.0
 margin_right = -4.0
 margin_bottom = 19.0
-custom_fonts/font = ExtResource( 8 )
+custom_fonts/font = ExtResource( 9 )
 text = "UNTITLED"
 align = 1
 valign = 1
 
 [node name="Keystroke" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 9 )
+stream = ExtResource( 10 )
 volume_db = -5.0
 
 [node name="Ding" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 10 )
+stream = ExtResource( 11 )
 
 [node name="StartTextPosition" type="Position2D" parent="."]
 editor/display_folded = true
@@ -266,12 +229,10 @@ position = Vector2( 15, 25 )
 visible = false
 position = Vector2( 156.87, 42.3662 )
 scale = Vector2( 0.48077, 0.501835 )
-texture = ExtResource( 11 )
+texture = ExtResource( 12 )
 [connection signal="pressed" from="UIBase/Save AS" to="." method="_on_Save_AS_pressed"]
 [connection signal="pressed" from="UIBase/Save AS" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="UIBase/Load" to="." method="_on_Load_pressed"]
 [connection signal="value_changed" from="UIBase/BPMcontroller" to="UIBase/RhythmControl" method="_on_BPMcontroller_value_changed"]
 [connection signal="toggled" from="UIBase/CheckBox" to="UIBase/RhythmControl" method="_on_CheckBox_toggled"]
 [connection signal="timeout" from="UIBase/RhythmControl/Metronometimer" to="UIBase/RhythmControl" method="_on_Metronometimer_timeout"]
-[connection signal="pressed" from="UIBase/SaveDialog/SaveButton" to="." method="_on_SaveButton_pressed"]
-[connection signal="pressed" from="UIBase/LoadDialog/LoadButton" to="." method="_on_LoadButton_pressed"]

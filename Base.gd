@@ -39,8 +39,8 @@ var saved = false
 var file_ext
 
 onready var TextEditWindow = $UIBase/TextEdit
-onready var LoadDialog = $UIBase/LoadDialog
-onready var SaveDialog = $UIBase/SaveDialog
+onready var load_dialog = $UIBase/LoadDialog
+onready var save_dialog = $UIBase/SaveDialog
 onready var StartTextPosition = $StartTextPosition
 
 onready var RythmControl = $UIBase/RhythmControl
@@ -53,8 +53,9 @@ func _ready():
 	print(font.size)
 	TextEditWindow.grab_focus()
 	
+	save_dialog.connect("on_text_entered", self, "_on_file_save_confirmed")
+	load_dialog.connect("on_text_entered", self, "_on_file_load_confirmed")
 	
-	pass
 
 #runs every frame
 func _process(delta):
@@ -106,8 +107,7 @@ func loadsyntax():
 
 
 func _load_file():
-	LoadDialog.popup_centered()
-	LoadDialog.get_node("LineEdit").grab_focus() 
+	load_dialog.popup_centered()
 
 #saves given text to a given file
 func _save_text_to_file(text : String, file_name : String):
@@ -147,30 +147,26 @@ func _get_text_from_file(file_name : String):
 	
 
 #When save dialog is confirmed
-func _on_SaveButton_pressed():
-	SaveDialog.hide()
-	savename = SaveDialog.get_node("LineEdit").text
+func _on_file_save_confirmed(file_name : String):
+	savename = file_name
 	_save_text_to_file(TextEditWindow.text, savename)
 	saved = true
-	
 	TextEditWindow.grab_focus()
+	
 
 func _save_file_as():
-	SaveDialog.popup_centered()
-	SaveDialog.get_node("LineEdit").grab_focus()
+	save_dialog.popup_centered()
 
 func _save_file():
 	if saved:
-		_save_text_to_file(TextEditWindow.text,savename)
+		_save_text_to_file(TextEditWindow.text, savename)
 	else:
 		_save_file_as()
 
 #When load dialog is confirmed
-func _on_LoadButton_pressed():
-	TextEditWindow.text = _get_text_from_file(LoadDialog.get_node("LineEdit").text)
-	LoadDialog.hide()
+func _on_file_load_confirmed(file_name : String):
+	TextEditWindow.text = _get_text_from_file(file_name)
 	TextEditWindow.grab_focus()
-	pass 
 
 
 func process_key(recoilAngle, keytime, keyoff, flashcolor, flashtime, sound, soundVolume, funcname, cursoroffset=Vector2()):
