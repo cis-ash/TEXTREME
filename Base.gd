@@ -32,18 +32,36 @@ const black = Color(0,0,0,1)
 const white = Color(1,1,1,1)
 
 #array of colors the screen can flash in, feel free to add more
-var colors = ["cyan","magenta","orchid", "pink", "orangered", "dodgerblue", "orange", "turquoise", "violet", "teal"]
+var flash_colors := ["cyan","magenta","orchid", "pink", "orangered", "dodgerblue", "orange", "turquoise", "violet", "teal"]
 
-var savename = ""
-var saved = false
-var file_ext
+var current_file_path := ""
+var current_file_name := "Untitled"
+var file_ext := ""
+var does_saved_file_exist := false
+var is_file_modified := false
 
 onready var TextEditWindow = $UIBase/TextEdit
-onready var LoadDialog = $UIBase/LoadDialog
-onready var SaveDialog = $UIBase/SaveDialog
+onready var load_dialog = $UIBase/LoadDialog
+onready var save_dialog = $UIBase/SaveDialog
+onready var bpm_dialog = $UIBase/BPMDialog
 onready var StartTextPosition = $StartTextPosition
 
 onready var RythmControl = $UIBase/RhythmControl
+
+func update_file_name_display():
+	if is_file_modified:
+		$UIBase/FileName.text = "*" + current_file_name
+	else:
+		$UIBase/FileName.text = current_file_name
+
+func set_new_is_file_modified(new_is_modified : bool):
+	is_file_modified = new_is_modified
+	update_file_name_display()
+
+func set_new_file_name(new_file_name : String):
+	current_file_name = new_file_name
+	file_ext = current_file_name.get_extension()
+	update_file_name_display()
 
 #runs on boot up, basic setup
 func _ready():
@@ -54,7 +72,11 @@ func _ready():
 	TextEditWindow.grab_focus()
 	
 	
-	pass
+	TextEditWindow.connect("text_changed", self, "set_new_is_file_modified", [true])
+	bpm_dialog.connect("on_text_entered", self, "_on_bpm_confirmed")
+	save_dialog.connect("on_text_entered", self, "_on_file_save_confirmed")
+	load_dialog.connect("on_text_entered", self, "_on_file_load_confirmed")
+	
 
 #runs every frame
 func _process(delta):
@@ -73,13 +95,14 @@ func _process(delta):
 	#var line = TextEditWindow.get_line_count()
 	#TextEditWindow.cursor_set_line(line)
 
-func getColor(idx):
-	return ColorN(colors[idx], 1)
-	pass
+func _on_text_modified():
+	is_file_modified = true
 
-func getRandomColor():
-	return ColorN(colors[randi()%colors.size()], 1)
-	pass
+func get_flash_color(idx):
+	return ColorN(flash_colors[idx], 1)
+
+func get_random_flash_color():
+	return ColorN(flash_colors[randi() % flash_colors.size()], 1)
 
 #loads syntax from file, replace the "\\syntax.txt" by any other file name with syntax in it
 #if you dont want the user to acces this file add it to the games folder and replace the OS.get_exec.. with a "res://" then add filename
@@ -96,7 +119,6 @@ func loadsyntax():
 	
 	if !info.is_open():
 		printerr("Failed to load custom syntax!")
-		TextEditWindow.text = "Failed to load custom syntax!"
 		return
 		
 	while !info.eof_reached():
@@ -105,77 +127,70 @@ func loadsyntax():
 			TextEditWindow.add_keyword_color(infoarray[0], Color(infoarray[1]))
 	
 	info.close()
-		
 
-
-func _on_Load_pressed():
-	LoadDialog.popup_centered()
-	LoadDialog.get_node("LineEdit").grab_focus()
-	pass 
+func _load_file():
+	load_dialog.popup_centered()
 
 #saves given text to a given file
-func save(text,fname):
-	savename = fname
-	var file = File.new()
-	file.open(fname, file.WRITE)
+func _save_text_to_file(text : String, file_name : String):
+	var file := File.new()
+	file.open(file_name, file.WRITE)
 	
-	if !file.is_open():
+	if file.is_open():
+		set_new_file_name(file_name)
+		set_new_is_file_modified(false)
+		does_saved_file_exist = true
+		file.store_string(text)
+		file.close()
+		loadsyntax()
+	else:
 		printerr("Failed to save the file!")
-		return
 	
-	file_ext = fname.get_extension()
-	file.store_string(text)
-	file.close()
-	loadsyntax()
 
-func lload(fname):
-	var file = File.new()
+func _get_text_from_file(file_name : String):
+	var file := File.new()
 	
-	file.open(fname, file.READ)
-	var content = file.get_as_text()
+	file.open(file_name, file.READ)
 	
-	if !file.is_open():
-		printerr("Failed to open the file!")
-		return "Failed to open the file!"
-	
-	file_ext = fname.get_extension()
-	file.close()
-	loadsyntax()
-	return content
+	if file.is_open():
+		var content := file.get_as_text()
+		set_new_file_name(file_name)
+		set_new_is_file_modified(false)
+		does_saved_file_exist = true
+		file.close()
+		loadsyntax()
+		return content
+	else:
+		set_new_file_name("Untitled")
+		set_new_is_file_modified(false)
+		does_saved_file_exist = false
+		return ""
 
 #When save dialog is confirmed
-func _on_SaveButton_pressed():
-	SaveDialog.hide()
-	savename = SaveDialog.get_node("LineEdit").text
-	save(TextEditWindow.text, savename)
-	saved = true
-	
+func _on_file_save_confirmed(file_name : String):
+	_save_text_to_file(TextEditWindow.text, file_name)
+	does_saved_file_exist = true
 	TextEditWindow.grab_focus()
-	pass
 
+func _save_file_as():
+	save_dialog.popup_centered()
 
-func _on_Save_AS_pressed():
-	SaveDialog.popup_centered()
-	SaveDialog.get_node("LineEdit").grab_focus()
-	pass 
-
-
-func _on_Save_pressed():
-	if saved:
-		save(TextEditWindow.text,savename)
-		return
-	
-	SaveDialog.popup_centered()
-	SaveDialog.get_node("LineEdit").grab_focus()
-	pass 
+func _save_file():
+	if does_saved_file_exist:
+		_save_text_to_file(TextEditWindow.text, current_file_name)
+	else:
+		_save_file_as()
 
 #When load dialog is confirmed
-func _on_LoadButton_pressed():
-	TextEditWindow.text = lload(LoadDialog.get_node("LineEdit").text)
-	LoadDialog.hide()
+func _on_file_load_confirmed(file_name : String):
+	TextEditWindow.text = _get_text_from_file(file_name)
 	TextEditWindow.grab_focus()
-	pass 
 
+func _set_bpm():
+	bpm_dialog.popup_centered()
+
+func _on_bpm_confirmed(bpm : String):
+	RythmControl.set_bpm(int(bpm))
 
 func process_key(recoilAngle, keytime, keyoff, flashcolor, flashtime, sound, soundVolume, funcname, cursoroffset=Vector2()):
 	$EffectManager.recoil(Vector2(1,0).rotated(recoilAngle),keytime,keyoff)
@@ -185,55 +200,64 @@ func process_key(recoilAngle, keytime, keyoff, flashcolor, flashtime, sound, sou
 	
 	if funcname != "nofunc":
 		funcref(self, funcname).call_func(locatecursor()+cursoroffset)
-	pass
 
 #Function used to organize all buttonpress effects, receives the name of the effect, then executes it
 func typejerk(type):
 	match type:
 		"other":
 			process_key(rand_range(0,TAU), keytimeother, keyoffother, 
-						getRandomColor(), flashtimeother, $Keystroke, -8, "spawnsparks")
+						get_random_flash_color(), flashtimeother, $Keystroke, -8, "spawnsparks")
 		"space":
 			process_key(rand_range(0,TAU), keytimespace, keyoffspace, 
-						getRandomColor(), flashtimespace, $Keystroke, -5, "nofunc")
+						get_random_flash_color(), flashtimespace, $Keystroke, -5, "nofunc")
 		"enter":
 			process_key(rand_range(-PI*0.25,PI*0.25), keytimeenter, keyoffenter, 
-						getColor(6), flashtimeenter, $Ding, -5, "spawnflash")
+						get_flash_color(6), flashtimeenter, $Ding, -5, "spawnflash")
 		"delete":
 			process_key(rand_range(-PI*0.25,PI*0.25)+PI/2, keytimedelete, keyoffdelete, 
-						getColor(1), flashtimedelete, $Keystroke, -8, "nofunc", charsize*Vector2(1,0))
+						get_flash_color(1), flashtimedelete, $Keystroke, -8, "nofunc", charsize*Vector2(1,0))
 		"repeat":
 			process_key(rand_range(0,TAU), 0.05, 1, 
-						getRandomColor(), 0.05, $Keystroke, -15, "spawnsparks")
+						get_random_flash_color(), 0.05, $Keystroke, -15, "spawnsparks")
 		"dot":
 			process_key(0.1,0.05,5, 
-						getRandomColor(),0.2, $Keystroke, 0, "spawndoteffects")
+						get_random_flash_color(),0.2, $Keystroke, 0, "spawndoteffects")
 		"dash":
 			process_key(rand_range(-PI*0.25,PI*0.25)-PI*0.5, 0.2, 4, 
-						getRandomColor(), 0.2, $Keystroke, -5, "spawndasheffects")
+						get_random_flash_color(), 0.2, $Keystroke, -5, "spawndasheffects")
 		"exclamation":
 			process_key(0.2,0.05,8, 
-						getRandomColor(), 0.2, $Keystroke, 0, "spawnexclamation")
+						get_random_flash_color(), 0.2, $Keystroke, 0, "spawnexclamation")
 		"question":
 			process_key(0.2,0.05,8, 
-						getRandomColor(), 0.2, $Keystroke, 0, "spawnquestion")
-	pass
+						get_random_flash_color(), 0.2, $Keystroke, 0, "spawnquestion")
 
 #input handler, all events are read top to bottom, please avoid triggering 2 effects in a single frame
 #btw, no adequate human types 2 characters per frame, dont worry about it
 #custom names for keys presses or combos of such are made in [project > input map]
 func _input(event):
-	if (event is InputEventKey && event.pressed && TextEditWindow.has_focus()):
-		if event.is_action("enter"):
-			typejerk("enter")
-		else:
-			queue_check = true
-		
-		if $UIBase/RhythmControl.isactive:
-			if $UIBase/RhythmControl.checktiming():
-				spawnhitconfirm()
+	if event is InputEventKey:
+		if event.is_action("editor_save") && Input.is_action_just_pressed("editor_save"):
+			_save_file()
+		elif event.is_action("editor_save_as") && Input.is_action_just_pressed("editor_save_as"):
+			_save_file_as()
+		elif event.is_action("editor_load") && Input.is_action_just_pressed("editor_load"):
+			_load_file()
+		elif event.is_action("editor_set_bpm") && Input.is_action_just_pressed("editor_set_bpm"):
+			_set_bpm()
+		elif event.is_action("editor_line_wrap") && Input.is_action_just_pressed("editor_line_wrap"):
+			TextEditWindow.wrap_enabled = !TextEditWindow.wrap_enabled
+		elif event.pressed && TextEditWindow.has_focus():
+			if event.is_action("enter"):
+				typejerk("enter")
 			else:
-				spawnhitfail()
+				queue_check = true
+			
+			if $UIBase/RhythmControl.get_is_active():
+				if $UIBase/RhythmControl.is_hitting():
+					spawnhitconfirm()
+				else:
+					spawnhitfail()
 
 func analyze_input(input):
 	if input != "":
@@ -244,9 +268,6 @@ func analyze_input(input):
 			"?": typejerk("question")
 			" ": typejerk("space")
 			_: typejerk("other")
-
-
-
 
 #its a miracle that this thing even works, touch at your own risk
 #to work properly, the Position2D node must be placed at the top-leftmost pixel of the first character in TextEditWindow
@@ -323,14 +344,14 @@ func spawnletter(position, text):
 func spawnhitconfirm():
 	var confirm = preload("res://Effects\\hit confirm.tscn").instance()
 	StartTextPosition.add_child(confirm)
-	confirm.global_position = RythmControl.get_node("Beatslider/center").global_position
+	confirm.global_position = RythmControl.get_node("center").global_position
 	confirm.scale = RythmControl.rect_scale
 	confirm.modulate = RythmControl.modulate
 
 func spawnhitfail():
 	var fail = preload("res://Effects\\fail.tscn").instance()
 	StartTextPosition.add_child(fail)
-	fail.global_position = RythmControl.get_node("Beatslider/center").global_position
+	fail.global_position = RythmControl.get_node("center").global_position
 	fail.scale = RythmControl.rect_scale
 	fail.modulate = RythmControl.modulate
 

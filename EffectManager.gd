@@ -27,6 +27,9 @@ func _process(delta):
 	
 	shake_time_left = max(shake_time_left-delta, 0)
 	
+	if recoiltime == 0:
+		recoiltime = 1
+	
 	#recovers from jerk
 	jerkoff.x = lerp(0, jerklength*lastdirection.x,recoilframe/recoiltime)
 	jerkoff.y = lerp(0, jerklength*lastdirection.y,recoilframe/recoiltime)
