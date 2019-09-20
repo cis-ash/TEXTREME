@@ -32,9 +32,9 @@ const black = Color(0,0,0,1)
 const white = Color(1,1,1,1)
 
 #array of colors the screen can flash in, feel free to add more
-var colors = ["cyan","magenta","orchid", "pink", "orangered", "dodgerblue", "orange", "turquoise", "violet", "teal"]
+var flash_colors := ["cyan","magenta","orchid", "pink", "orangered", "dodgerblue", "orange", "turquoise", "violet", "teal"]
 
-var savename = ""
+var savename := "Untitled"
 var saved = false
 var file_ext
 
@@ -73,13 +73,11 @@ func _process(delta):
 	#var line = TextEditWindow.get_line_count()
 	#TextEditWindow.cursor_set_line(line)
 
-func getColor(idx):
-	return ColorN(colors[idx], 1)
-	pass
+func get_flash_color(idx):
+	return ColorN(flash_colors[idx], 1)
 
-func getRandomColor():
-	return ColorN(colors[randi()%colors.size()], 1)
-	pass
+func get_random_flash_color():
+	return ColorN(flash_colors[randi() % flash_colors.size()], 1)
 
 #loads syntax from file, replace the "\\syntax.txt" by any other file name with syntax in it
 #if you dont want the user to acces this file add it to the games folder and replace the OS.get_exec.. with a "res://" then add filename
@@ -96,7 +94,6 @@ func loadsyntax():
 	
 	if !info.is_open():
 		printerr("Failed to load custom syntax!")
-		TextEditWindow.text = "Failed to load custom syntax!"
 		return
 		
 	while !info.eof_reached():
@@ -108,70 +105,69 @@ func loadsyntax():
 		
 
 
-func _on_Load_pressed():
+func _load_file():
 	LoadDialog.popup_centered()
-	LoadDialog.get_node("LineEdit").grab_focus()
-	pass 
+	LoadDialog.get_node("LineEdit").grab_focus() 
 
 #saves given text to a given file
-func save(text,fname):
-	savename = fname
-	var file = File.new()
-	file.open(fname, file.WRITE)
+func _save_text_to_file(text : String, file_name : String):
+	var file := File.new()
+	file.open(file_name, file.WRITE)
 	
-	if !file.is_open():
+	if file.is_open():
+		savename = file_name
+		$UIBase/FileName.text = savename
+		file_ext = file_name.get_extension()
+		file.store_string(text)
+		file.close()
+		loadsyntax()
+	else:
 		printerr("Failed to save the file!")
-		return
 	
-	file_ext = fname.get_extension()
-	file.store_string(text)
-	file.close()
-	loadsyntax()
 
-func lload(fname):
-	var file = File.new()
+func _get_text_from_file(file_name : String):
+	var file := File.new()
 	
-	file.open(fname, file.READ)
-	var content = file.get_as_text()
+	file.open(file_name, file.READ)
 	
-	if !file.is_open():
-		printerr("Failed to open the file!")
-		return "Failed to open the file!"
+	if file.is_open():
+		var content := file.get_as_text()
+		savename = file_name
+		file_ext = file_name.get_extension()
+		$UIBase/FileName.text = savename
+		file.close()
+		loadsyntax()
+		return content
+	else:
+		file_ext = ""
+		savename = "Untitled"
+		$UIBase/FileName.text = savename
+		return ""
 	
-	file_ext = fname.get_extension()
-	file.close()
-	loadsyntax()
-	return content
+	
 
 #When save dialog is confirmed
 func _on_SaveButton_pressed():
 	SaveDialog.hide()
 	savename = SaveDialog.get_node("LineEdit").text
-	save(TextEditWindow.text, savename)
+	_save_text_to_file(TextEditWindow.text, savename)
 	saved = true
 	
 	TextEditWindow.grab_focus()
-	pass
 
-
-func _on_Save_AS_pressed():
+func _save_file_as():
 	SaveDialog.popup_centered()
 	SaveDialog.get_node("LineEdit").grab_focus()
-	pass 
 
-
-func _on_Save_pressed():
+func _save_file():
 	if saved:
-		save(TextEditWindow.text,savename)
-		return
-	
-	SaveDialog.popup_centered()
-	SaveDialog.get_node("LineEdit").grab_focus()
-	pass 
+		_save_text_to_file(TextEditWindow.text,savename)
+	else:
+		_save_file_as()
 
 #When load dialog is confirmed
 func _on_LoadButton_pressed():
-	TextEditWindow.text = lload(LoadDialog.get_node("LineEdit").text)
+	TextEditWindow.text = _get_text_from_file(LoadDialog.get_node("LineEdit").text)
 	LoadDialog.hide()
 	TextEditWindow.grab_focus()
 	pass 
@@ -192,48 +188,55 @@ func typejerk(type):
 	match type:
 		"other":
 			process_key(rand_range(0,TAU), keytimeother, keyoffother, 
-						getRandomColor(), flashtimeother, $Keystroke, -8, "spawnsparks")
+						get_random_flash_color(), flashtimeother, $Keystroke, -8, "spawnsparks")
 		"space":
 			process_key(rand_range(0,TAU), keytimespace, keyoffspace, 
-						getRandomColor(), flashtimespace, $Keystroke, -5, "nofunc")
+						get_random_flash_color(), flashtimespace, $Keystroke, -5, "nofunc")
 		"enter":
 			process_key(rand_range(-PI*0.25,PI*0.25), keytimeenter, keyoffenter, 
-						getColor(6), flashtimeenter, $Ding, -5, "spawnflash")
+						get_flash_color(6), flashtimeenter, $Ding, -5, "spawnflash")
 		"delete":
 			process_key(rand_range(-PI*0.25,PI*0.25)+PI/2, keytimedelete, keyoffdelete, 
-						getColor(1), flashtimedelete, $Keystroke, -8, "nofunc", charsize*Vector2(1,0))
+						get_flash_color(1), flashtimedelete, $Keystroke, -8, "nofunc", charsize*Vector2(1,0))
 		"repeat":
 			process_key(rand_range(0,TAU), 0.05, 1, 
-						getRandomColor(), 0.05, $Keystroke, -15, "spawnsparks")
+						get_random_flash_color(), 0.05, $Keystroke, -15, "spawnsparks")
 		"dot":
 			process_key(0.1,0.05,5, 
-						getRandomColor(),0.2, $Keystroke, 0, "spawndoteffects")
+						get_random_flash_color(),0.2, $Keystroke, 0, "spawndoteffects")
 		"dash":
 			process_key(rand_range(-PI*0.25,PI*0.25)-PI*0.5, 0.2, 4, 
-						getRandomColor(), 0.2, $Keystroke, -5, "spawndasheffects")
+						get_random_flash_color(), 0.2, $Keystroke, -5, "spawndasheffects")
 		"exclamation":
 			process_key(0.2,0.05,8, 
-						getRandomColor(), 0.2, $Keystroke, 0, "spawnexclamation")
+						get_random_flash_color(), 0.2, $Keystroke, 0, "spawnexclamation")
 		"question":
 			process_key(0.2,0.05,8, 
-						getRandomColor(), 0.2, $Keystroke, 0, "spawnquestion")
+						get_random_flash_color(), 0.2, $Keystroke, 0, "spawnquestion")
 	pass
 
 #input handler, all events are read top to bottom, please avoid triggering 2 effects in a single frame
 #btw, no adequate human types 2 characters per frame, dont worry about it
 #custom names for keys presses or combos of such are made in [project > input map]
 func _input(event):
-	if (event is InputEventKey && event.pressed && TextEditWindow.has_focus()):
-		if event.is_action("enter"):
-			typejerk("enter")
-		else:
-			queue_check = true
-		
-		if $UIBase/RhythmControl.isactive:
-			if $UIBase/RhythmControl.checktiming():
-				spawnhitconfirm()
+	if event is InputEventKey:
+		if event.is_action("editor_save") && Input.is_action_just_pressed("editor_save"):
+			_save_file()
+		elif event.is_action("editor_save_as") && Input.is_action_just_pressed("editor_save_as"):
+			_save_file_as()
+		elif event.is_action("editor_load") && Input.is_action_just_pressed("editor_load"):
+			_load_file()
+		elif event.pressed && TextEditWindow.has_focus():
+			if event.is_action("enter"):
+				typejerk("enter")
 			else:
-				spawnhitfail()
+				queue_check = true
+			
+			if $UIBase/RhythmControl.isactive:
+				if $UIBase/RhythmControl.checktiming():
+					spawnhitconfirm()
+				else:
+					spawnhitfail()
 
 func analyze_input(input):
 	if input != "":

@@ -1,21 +1,19 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Base.gd" type="Script" id=1]
 [ext_resource path="res://EffectManager.gd" type="Script" id=2]
 [ext_resource path="res://Theme.tres" type="Theme" id=3]
-[ext_resource path="res://Fonts/TextEditFont.tres" type="DynamicFont" id=4]
-[ext_resource path="res://Fonts/Pixel-unicode.tres" type="DynamicFont" id=5]
-[ext_resource path="res://RhythmControl.gd" type="Script" id=6]
-[ext_resource path="res://Sprites/slider.png" type="Texture" id=7]
-[ext_resource path="res://Sprites/target.png" type="Texture" id=8]
-[ext_resource path="res://Sounds/250551__druminfected__metronomeup.wav" type="AudioStream" id=9]
-[ext_resource path="res://Sounds/keystroke.wav" type="AudioStream" id=10]
-[ext_resource path="res://Sounds/enter.wav" type="AudioStream" id=11]
-[ext_resource path="res://icon.png" type="Texture" id=12]
+[ext_resource path="res://RhythmControl.gd" type="Script" id=4]
+[ext_resource path="res://Sprites/slider.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/target.png" type="Texture" id=6]
+[ext_resource path="res://Sounds/250551__druminfected__metronomeup.wav" type="AudioStream" id=7]
+[ext_resource path="res://Fonts/unicode.tres" type="DynamicFont" id=8]
+[ext_resource path="res://Sounds/keystroke.wav" type="AudioStream" id=9]
+[ext_resource path="res://Sounds/enter.wav" type="AudioStream" id=10]
+[ext_resource path="res://icon.png" type="Texture" id=11]
 
 [sub_resource type="Theme" id=1]
 resource_local_to_scene = true
-default_font = ExtResource( 5 )
 
 [node name="Base" type="CanvasLayer"]
 script = ExtResource( 1 )
@@ -43,16 +41,16 @@ anchor_bottom = 1.0
 margin_left = 2.0
 margin_top = 3.0
 margin_right = -4.0
-margin_bottom = -3.0
+margin_bottom = -20.0
 color = Color( 0.125, 0.125, 0.125, 1 )
 
 [node name="TextEdit" type="TextEdit" parent="UIBase"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 22.0
 margin_right = -7.0
-margin_bottom = -6.0
+margin_bottom = -41.0
 grow_horizontal = 0
 grow_vertical = 0
 mouse_default_cursor_shape = 3
@@ -65,36 +63,26 @@ caret_blink = true
 caret_blink_speed = 0.5
 caret_moving_by_right_click = false
 
-[node name="Save" type="Button" parent="UIBase"]
-margin_left = 6.0
-margin_top = 7.0
-margin_right = 80.0
-margin_bottom = 27.0
-size_flags_vertical = 5
-size_flags_stretch_ratio = 0.0
-theme = ExtResource( 3 )
-custom_fonts/font = ExtResource( 4 )
-text = "SAVE"
-
 [node name="Save AS" type="Button" parent="UIBase"]
+visible = false
 margin_left = 86.0
 margin_top = 7.0
 margin_right = 160.0
 margin_bottom = 27.0
 theme = ExtResource( 3 )
-custom_fonts/font = ExtResource( 4 )
 text = "SAVE AS"
 
 [node name="Load" type="Button" parent="UIBase"]
+visible = false
 margin_left = 166.0
 margin_top = 7.0
 margin_right = 240.0
 margin_bottom = 27.0
 theme = ExtResource( 3 )
-custom_fonts/font = ExtResource( 4 )
 text = "LOAD"
 
 [node name="BPMcontroller" type="SpinBox" parent="UIBase"]
+visible = false
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -266.0
@@ -109,6 +97,7 @@ rounded = true
 suffix = "BPM"
 
 [node name="CheckBox" type="CheckBox" parent="UIBase"]
+visible = false
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -131.0
@@ -117,15 +106,16 @@ margin_right = 13.0
 margin_bottom = 29.0
 focus_mode = 0
 theme = ExtResource( 3 )
-custom_fonts/font = ExtResource( 4 )
 enabled_focus_mode = 0
 text = "rhythm mode"
 
 [node name="RhythmControl" type="Control" parent="UIBase"]
+editor/display_folded = true
+visible = false
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 6 )
+script = ExtResource( 4 )
 
 [node name="Beatslider" type="Control" parent="UIBase/RhythmControl"]
 anchor_top = 1.0
@@ -146,29 +136,29 @@ color = Color( 0.121569, 0.121569, 0.121569, 1 )
 position = Vector2( 137.328, 45.776 )
 
 [node name="slider1" type="Sprite" parent="UIBase/RhythmControl/Beatslider/right"]
-texture = ExtResource( 7 )
+texture = ExtResource( 5 )
 
 [node name="slider2" type="Sprite" parent="UIBase/RhythmControl/Beatslider/right"]
-texture = ExtResource( 7 )
+texture = ExtResource( 5 )
 
 [node name="left" type="Position2D" parent="UIBase/RhythmControl/Beatslider"]
 position = Vector2( 139.318, 44.4492 )
 
 [node name="slider1" type="Sprite" parent="UIBase/RhythmControl/Beatslider/left"]
-texture = ExtResource( 7 )
+texture = ExtResource( 5 )
 
 [node name="slider2" type="Sprite" parent="UIBase/RhythmControl/Beatslider/left"]
 position = Vector2( 141.972, 44.4492 )
-texture = ExtResource( 7 )
+texture = ExtResource( 5 )
 
 [node name="center" type="Position2D" parent="UIBase/RhythmControl/Beatslider"]
 position = Vector2( 138.655, 41.132 )
 
 [node name="target" type="Sprite" parent="UIBase/RhythmControl/Beatslider/center"]
-texture = ExtResource( 8 )
+texture = ExtResource( 6 )
 
 [node name="Metronome" type="AudioStreamPlayer" parent="UIBase/RhythmControl"]
-stream = ExtResource( 9 )
+stream = ExtResource( 7 )
 volume_db = -10.0
 
 [node name="Metronometimer" type="Timer" parent="UIBase/RhythmControl"]
@@ -176,7 +166,6 @@ wait_time = 4096.0
 autostart = true
 
 [node name="SaveDialog" type="WindowDialog" parent="UIBase"]
-editor/display_folded = true
 margin_left = 74.0
 margin_top = 227.0
 margin_right = 228.0
@@ -239,23 +228,45 @@ margin_bottom = 67.0
 theme = ExtResource( 3 )
 text = "Load this file"
 
+[node name="Label" type="Label" parent="UIBase"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -229.5
+margin_top = -14.0
+margin_right = 229.5
+custom_fonts/font = ExtResource( 8 )
+text = "F1:Save F2:save AS f3:load f4:set bpm f5 line wrap "
+uppercase = true
+
+[node name="FileName" type="Label" parent="UIBase"]
+anchor_right = 1.0
+margin_left = 1.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = 19.0
+custom_fonts/font = ExtResource( 8 )
+text = "UNTITLED"
+align = 1
+valign = 1
+
 [node name="Keystroke" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 10 )
+stream = ExtResource( 9 )
 volume_db = -5.0
 
 [node name="Ding" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 11 )
+stream = ExtResource( 10 )
 
 [node name="StartTextPosition" type="Position2D" parent="."]
-position = Vector2( 15, 35 )
+editor/display_folded = true
+position = Vector2( 15, 25 )
 
 [node name="Cursor" type="Sprite" parent="StartTextPosition"]
 visible = false
 position = Vector2( 156.87, 42.3662 )
 scale = Vector2( 0.48077, 0.501835 )
-texture = ExtResource( 12 )
-
-[connection signal="pressed" from="UIBase/Save" to="." method="_on_Save_pressed"]
+texture = ExtResource( 11 )
 [connection signal="pressed" from="UIBase/Save AS" to="." method="_on_Save_AS_pressed"]
 [connection signal="pressed" from="UIBase/Save AS" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="UIBase/Load" to="." method="_on_Load_pressed"]
