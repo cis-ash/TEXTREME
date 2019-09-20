@@ -41,6 +41,7 @@ var file_ext
 onready var TextEditWindow = $UIBase/TextEdit
 onready var load_dialog = $UIBase/LoadDialog
 onready var save_dialog = $UIBase/SaveDialog
+onready var bpm_dialog = $UIBase/BPMDialog
 onready var StartTextPosition = $StartTextPosition
 
 onready var RythmControl = $UIBase/RhythmControl
@@ -53,6 +54,7 @@ func _ready():
 	print(font.size)
 	TextEditWindow.grab_focus()
 	
+	bpm_dialog.connect("on_text_entered", self, "_on_bpm_confirmed")
 	save_dialog.connect("on_text_entered", self, "_on_file_save_confirmed")
 	load_dialog.connect("on_text_entered", self, "_on_file_load_confirmed")
 	
@@ -168,6 +170,11 @@ func _on_file_load_confirmed(file_name : String):
 	TextEditWindow.text = _get_text_from_file(file_name)
 	TextEditWindow.grab_focus()
 
+func _set_bpm():
+	bpm_dialog.popup_centered()
+
+func _on_bpm_confirmed(bpm : String):
+	RythmControl.set_bpm(int(bpm))
 
 func process_key(recoilAngle, keytime, keyoff, flashcolor, flashtime, sound, soundVolume, funcname, cursoroffset=Vector2()):
 	$EffectManager.recoil(Vector2(1,0).rotated(recoilAngle),keytime,keyoff)
@@ -222,14 +229,18 @@ func _input(event):
 			_save_file_as()
 		elif event.is_action("editor_load") && Input.is_action_just_pressed("editor_load"):
 			_load_file()
+		elif event.is_action("editor_set_bpm") && Input.is_action_just_pressed("editor_set_bpm"):
+			_set_bpm()
+		elif event.is_action("editor_line_wrap") && Input.is_action_just_pressed("editor_line_wrap"):
+			TextEditWindow.wrap_enabled = !TextEditWindow.wrap_enabled
 		elif event.pressed && TextEditWindow.has_focus():
 			if event.is_action("enter"):
 				typejerk("enter")
 			else:
 				queue_check = true
 			
-			if $UIBase/RhythmControl.isactive:
-				if $UIBase/RhythmControl.checktiming():
+			if $UIBase/RhythmControl.get_is_active():
+				if $UIBase/RhythmControl.is_hitting():
 					spawnhitconfirm()
 				else:
 					spawnhitfail()
@@ -322,14 +333,14 @@ func spawnletter(position, text):
 func spawnhitconfirm():
 	var confirm = preload("res://Effects\\hit confirm.tscn").instance()
 	StartTextPosition.add_child(confirm)
-	confirm.global_position = RythmControl.get_node("Beatslider/center").global_position
+	confirm.global_position = RythmControl.get_node("center").global_position
 	confirm.scale = RythmControl.rect_scale
 	confirm.modulate = RythmControl.modulate
 
 func spawnhitfail():
 	var fail = preload("res://Effects\\fail.tscn").instance()
 	StartTextPosition.add_child(fail)
-	fail.global_position = RythmControl.get_node("Beatslider/center").global_position
+	fail.global_position = RythmControl.get_node("center").global_position
 	fail.scale = RythmControl.rect_scale
 	fail.modulate = RythmControl.modulate
 
