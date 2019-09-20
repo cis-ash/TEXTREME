@@ -34,9 +34,11 @@ const white = Color(1,1,1,1)
 #array of colors the screen can flash in, feel free to add more
 var flash_colors := ["cyan","magenta","orchid", "pink", "orangered", "dodgerblue", "orange", "turquoise", "violet", "teal"]
 
-var savename := "Untitled"
-var saved = false
-var file_ext
+var current_file_path := ""
+var current_file_name := "Untitled"
+var file_ext := ""
+var does_saved_file_exist := false
+var is_file_modified := false
 
 onready var TextEditWindow = $UIBase/TextEdit
 onready var load_dialog = $UIBase/LoadDialog
@@ -46,6 +48,21 @@ onready var StartTextPosition = $StartTextPosition
 
 onready var RythmControl = $UIBase/RhythmControl
 
+func update_file_name_display():
+	if is_file_modified:
+		$UIBase/FileName.text = "*" + current_file_name
+	else:
+		$UIBase/FileName.text = current_file_name
+
+func set_new_is_file_modified(new_is_modified : bool):
+	is_file_modified = new_is_modified
+	update_file_name_display()
+
+func set_new_file_name(new_file_name : String):
+	current_file_name = new_file_name
+	file_ext = current_file_name.get_extension()
+	update_file_name_display()
+
 #runs on boot up, basic setup
 func _ready():
 	var config = get_node("/root/config")
@@ -54,6 +71,8 @@ func _ready():
 	print(font.size)
 	TextEditWindow.grab_focus()
 	
+	
+	TextEditWindow.connect("text_changed", self, "set_new_is_file_modified", [true])
 	bpm_dialog.connect("on_text_entered", self, "_on_bpm_confirmed")
 	save_dialog.connect("on_text_entered", self, "_on_file_save_confirmed")
 	load_dialog.connect("on_text_entered", self, "_on_file_load_confirmed")
@@ -75,6 +94,9 @@ func _process(delta):
 	y_was = TextEditWindow.cursor_get_line()
 	#var line = TextEditWindow.get_line_count()
 	#TextEditWindow.cursor_set_line(line)
+
+func _on_text_modified():
+	is_file_modified = true
 
 func get_flash_color(idx):
 	return ColorN(flash_colors[idx], 1)
@@ -105,8 +127,6 @@ func loadsyntax():
 			TextEditWindow.add_keyword_color(infoarray[0], Color(infoarray[1]))
 	
 	info.close()
-		
-
 
 func _load_file():
 	load_dialog.popup_centered()
@@ -117,9 +137,9 @@ func _save_text_to_file(text : String, file_name : String):
 	file.open(file_name, file.WRITE)
 	
 	if file.is_open():
-		savename = file_name
-		$UIBase/FileName.text = savename
-		file_ext = file_name.get_extension()
+		set_new_file_name(file_name)
+		set_new_is_file_modified(false)
+		does_saved_file_exist = true
 		file.store_string(text)
 		file.close()
 		loadsyntax()
@@ -134,34 +154,30 @@ func _get_text_from_file(file_name : String):
 	
 	if file.is_open():
 		var content := file.get_as_text()
-		savename = file_name
-		file_ext = file_name.get_extension()
-		$UIBase/FileName.text = savename
+		set_new_file_name(file_name)
+		set_new_is_file_modified(false)
+		does_saved_file_exist = true
 		file.close()
 		loadsyntax()
 		return content
 	else:
-		file_ext = ""
-		savename = "Untitled"
-		$UIBase/FileName.text = savename
+		set_new_file_name("Untitled")
+		set_new_is_file_modified(false)
+		does_saved_file_exist = false
 		return ""
-	
-	
 
 #When save dialog is confirmed
 func _on_file_save_confirmed(file_name : String):
-	savename = file_name
-	_save_text_to_file(TextEditWindow.text, savename)
-	saved = true
+	_save_text_to_file(TextEditWindow.text, file_name)
+	does_saved_file_exist = true
 	TextEditWindow.grab_focus()
-	
 
 func _save_file_as():
 	save_dialog.popup_centered()
 
 func _save_file():
-	if saved:
-		_save_text_to_file(TextEditWindow.text, savename)
+	if does_saved_file_exist:
+		_save_text_to_file(TextEditWindow.text, current_file_name)
 	else:
 		_save_file_as()
 
@@ -184,7 +200,6 @@ func process_key(recoilAngle, keytime, keyoff, flashcolor, flashtime, sound, sou
 	
 	if funcname != "nofunc":
 		funcref(self, funcname).call_func(locatecursor()+cursoroffset)
-	pass
 
 #Function used to organize all buttonpress effects, receives the name of the effect, then executes it
 func typejerk(type):
@@ -216,7 +231,6 @@ func typejerk(type):
 		"question":
 			process_key(0.2,0.05,8, 
 						get_random_flash_color(), 0.2, $Keystroke, 0, "spawnquestion")
-	pass
 
 #input handler, all events are read top to bottom, please avoid triggering 2 effects in a single frame
 #btw, no adequate human types 2 characters per frame, dont worry about it
@@ -254,9 +268,6 @@ func analyze_input(input):
 			"?": typejerk("question")
 			" ": typejerk("space")
 			_: typejerk("other")
-
-
-
 
 #its a miracle that this thing even works, touch at your own risk
 #to work properly, the Position2D node must be placed at the top-leftmost pixel of the first character in TextEditWindow
