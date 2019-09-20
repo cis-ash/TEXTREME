@@ -3,7 +3,4 @@
 [ext_resource path="res://Fonts/unicode.tres" type="DynamicFont" id=1]
 
 [resource]
-
 default_font = ExtResource( 1 )
-_sections_unfolded = [ "Extra Spacing", "Font", "Resource", "Settings" ]
-

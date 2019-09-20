@@ -34,7 +34,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="ForgroundColor" type="ColorRect" parent="UIBase"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 2.0
@@ -120,7 +119,6 @@ wait_time = 4096.0
 autostart = true
 
 [node name="SaveDialog" parent="UIBase" instance=ExtResource( 8 )]
-visible = false
 margin_left = 59.0316
 margin_top = 79.7104
 margin_right = 213.032
@@ -132,7 +130,6 @@ forbidden_texts = PoolStringArray( "COM1", "COM2", "COM3", "COM4", "COM5", "COM6
 max_characters = 15
 
 [node name="LoadDialog" parent="UIBase" instance=ExtResource( 8 )]
-visible = false
 margin_left = 293.737
 margin_top = 55.7609
 margin_right = 447.737
@@ -144,7 +141,6 @@ forbidden_texts = PoolStringArray( "COM1", "COM2", "COM3", "COM4", "COM5", "COM6
 max_characters = 15
 
 [node name="BPMDialog" parent="UIBase" instance=ExtResource( 8 )]
-visible = false
 margin_left = 293.737
 margin_top = 55.7609
 margin_right = 447.737
@@ -164,7 +160,7 @@ margin_left = -229.5
 margin_top = -14.0
 margin_right = 229.5
 custom_fonts/font = ExtResource( 9 )
-text = "F1:Save F2:save AS f3:load f4:set bpm f5 line wrap "
+text = "F1:Save F2:save AS f3:load f4:set bpm f5:line wrap "
 uppercase = true
 
 [node name="FileName" type="Label" parent="UIBase"]
