@@ -46,7 +46,7 @@ onready var save_dialog = $UIBase/SaveDialog
 onready var bpm_dialog = $UIBase/BPMDialog
 onready var StartTextPosition = $StartTextPosition
 
-onready var RythmControl = $UIBase/RhythmControl
+onready var RhythmControl = $UIBase/RhythmControl
 
 func update_file_name_display():
 	if is_file_modified:
@@ -190,7 +190,7 @@ func _set_bpm():
 	bpm_dialog.popup_centered()
 
 func _on_bpm_confirmed(bpm : String):
-	RythmControl.set_bpm(int(bpm))
+	RhythmControl.set_bpm(int(bpm))
 
 func process_key(recoilAngle, keytime, keyoff, flashcolor, flashtime, sound, soundVolume, funcname, cursoroffset=Vector2()):
 	$EffectManager.recoil(Vector2(1,0).rotated(recoilAngle),keytime,keyoff)
@@ -344,16 +344,16 @@ func spawnletter(position, text):
 func spawnhitconfirm():
 	var confirm = preload("res://Effects\\hit confirm.tscn").instance()
 	StartTextPosition.add_child(confirm)
-	confirm.global_position = RythmControl.get_node("center").global_position
-	confirm.scale = RythmControl.rect_scale
-	confirm.modulate = RythmControl.modulate
+	confirm.global_position = RhythmControl.get_node("center").global_position
+	confirm.scale = RhythmControl.rect_scale
+	confirm.modulate = RhythmControl.modulate
 
 func spawnhitfail():
 	var fail = preload("res://Effects\\fail.tscn").instance()
 	StartTextPosition.add_child(fail)
-	fail.global_position = RythmControl.get_node("center").global_position
-	fail.scale = RythmControl.rect_scale
-	fail.modulate = RythmControl.modulate
+	fail.global_position = RhythmControl.get_node("center").global_position
+	fail.scale = RhythmControl.rect_scale
+	fail.modulate = RhythmControl.modulate
 
 func what_added(linebefore):	
 	if linebefore.is_subsequence_of(lineafter) && !lineafter.is_subsequence_of(linebefore) && y_was == TextEditWindow.cursor_get_line():
