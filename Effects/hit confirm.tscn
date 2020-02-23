@@ -4,63 +4,26 @@
 [ext_resource path="res://Sprites/target.png" type="Texture" id=2]
 
 [sub_resource type="Curve" id=1]
-
-min_value = 0.0
-max_value = 1.0
-bake_resolution = 100
 _data = [ Vector2( 0, 1 ), 0.0, 12.9734, 0, 0, Vector2( 1, 0 ), -4.47846, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=2]
-
-flags = 4
-width = 2048
 curve = SubResource( 1 )
 
 [sub_resource type="ParticlesMaterial" id=3]
-
-render_priority = 0
-trail_divisor = 1
-emission_shape = 0
-flag_align_y = false
-flag_rotate_y = false
 flag_disable_z = true
 spread = 180.0
-flatness = 0.0
 gravity = Vector3( 0, 980, 0 )
 initial_velocity = 400.0
 initial_velocity_random = 0.3
-angular_velocity = 0.0
-angular_velocity_random = 0.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
-linear_accel = 0.0
-linear_accel_random = 0.0
-radial_accel = 0.0
-radial_accel_random = 0.0
-tangential_accel = 0.0
-tangential_accel_random = 0.0
-damping = 0.0
-damping_random = 0.0
 angle = 360.0
 angle_random = 1.0
-scale = 1.0
-scale_random = 0.0
 scale_curve = SubResource( 2 )
-color = Color( 1, 1, 1, 1 )
-hue_variation = 0.0
-hue_variation_random = 0.0
-anim_speed = 0.0
-anim_speed_random = 0.0
-anim_offset = 0.0
-anim_offset_random = 0.0
-anim_loop = false
-_sections_unfolded = [ "Angle", "Gravity", "Initial Velocity", "Scale", "Spread" ]
 
 [sub_resource type="Animation" id=4]
-
 resource_name = "explode"
 length = 0.5
-loop = false
 step = 0.01
 tracks/0/type = "value"
 tracks/0/path = NodePath("target:modulate")
@@ -87,58 +50,26 @@ tracks/1/keys = {
 "values": [ Vector2( 1, 1 ), Vector2( 3, 3 ), Vector2( 10, 10 ) ]
 }
 
-[node name="HitConfirm" type="Node2D" index="0"]
-
+[node name="HitConfirm" type="Node2D"]
 script = ExtResource( 1 )
+particles = [ NodePath("Particles2D") ]
 
-[node name="Particles2D" type="Particles2D" parent="." index="0"]
-
+[node name="Particles2D" type="Particles2D" parent="."]
 modulate = Color( 0.596078, 0.968627, 0, 1 )
-emitting = true
+emitting = false
 amount = 64
 lifetime = 0.5
-one_shot = false
-preprocess = 0.0
-speed_scale = 1.0
+one_shot = true
 explosiveness = 1.0
-randomness = 0.0
-fixed_fps = 0
-fract_delta = true
-visibility_rect = Rect2( -100, -100, 200, 200 )
-local_coords = true
-draw_order = 0
 process_material = SubResource( 3 )
-texture = null
-normal_map = null
-h_frames = 1
-v_frames = 1
-_sections_unfolded = [ "Process Material", "Textures", "Time", "Transform", "Visibility", "Z Index" ]
 
-[node name="target" type="Sprite" parent="." index="1"]
-
+[node name="target" type="Sprite" parent="."]
 modulate = Color( 0.596078, 0.968627, 0, 1 )
 texture = ExtResource( 2 )
-_sections_unfolded = [ "Transform", "Visibility", "Z Index" ]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="2"]
-
-root_node = NodePath("..")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "explode"
-playback_process_mode = 1
-playback_default_blend_time = 0.0
-playback_speed = 1.0
 anims/explode = SubResource( 4 )
-blend_times = [  ]
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." index="3"]
-
-stream = null
-volume_db = 0.0
-pitch_scale = 1.0
-autoplay = false
-mix_target = 0
-bus = "Master"
-
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="destroy"]
-
-

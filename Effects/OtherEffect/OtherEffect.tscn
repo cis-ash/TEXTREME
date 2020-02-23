@@ -1,9 +1,7 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Effects/Effect.gd" type="Script" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
-
-
+[ext_resource path="res://Effects/MasterEffect/MasterEffect.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Effects/OtherEffect/OtherEffect.gd" type="Script" id=2]
 
 [sub_resource type="Curve" id=1]
 min_value = -360.0
@@ -33,28 +31,20 @@ angle_curve = SubResource( 2 )
 scale_curve = SubResource( 4 )
 color = Color( 0.972656, 0.822875, 0.311554, 1 )
 
-[node name="Sparkler" type="Node2D"]
-z_index = 2
-script = ExtResource( 1 )
-particles = [ NodePath("Particles2D") ]
+[node name="MasterEffect" instance=ExtResource( 1 )]
 
-[node name="Timer" type="Timer" parent="."]
-one_shot = true
-autostart = true
+[node name="Parent" type="Node2D" parent="." index="0"]
+script = ExtResource( 2 )
 
-[node name="Visual allign" type="Sprite" parent="."]
-visible = false
-position = Vector2( -0.707107, -9.19239 )
-rotation = 0.785398
-scale = Vector2( 0.125, 0.125 )
-texture = ExtResource( 2 )
-offset = Vector2( 32, 32 )
-
-[node name="Particles2D" type="Particles2D" parent="."]
+[node name="Sparks" type="Particles2D" parent="Parent" index="0"]
 rotation = -0.785398
 z_index = 2
 emitting = false
 one_shot = true
 explosiveness = 1.0
 process_material = SubResource( 5 )
-[connection signal="timeout" from="Timer" to="." method="destroy"]
+
+[node name="Timer" type="Timer" parent="." index="1"]
+autostart = true
+[connection signal="on_setup_done" from="." to="Parent" method="on_setup_done"]
+[connection signal="timeout" from="Timer" to="." method="queue_free"]

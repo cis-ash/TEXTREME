@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Fonts/EditorFont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Scenes/SpecialTextEdit/SpecialTextEdit.gd" type="Script" id=2]
+
+[node name="SpecialTextEdit" type="TextEdit" groups=[
+"editor_font_users",
+]]
+margin_right = 269.0
+margin_bottom = 205.0
+mouse_filter = 2
+custom_fonts/font = ExtResource( 1 )
+custom_constants/line_spacing = 3
+highlight_current_line = true
+show_line_numbers = true
+context_menu_enabled = false
+wrap_enabled = true
+script = ExtResource( 2 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color( 1, 1, 1, 0.301961 )
+margin_left = 8.0
+margin_top = 7.0
+margin_right = 10.0
+margin_bottom = 9.0
+color = Color( 1, 0, 0, 1 )
+
+[node name="ResetBuffers" type="Timer" parent="."]
+one_shot = true
+[connection signal="cursor_changed" from="." to="." method="_on_cursor_changed"]
+[connection signal="text_changed" from="." to="." method="_on_text_changed"]
+[connection signal="timeout" from="ResetBuffers" to="." method="_reset_previous_buffers"]

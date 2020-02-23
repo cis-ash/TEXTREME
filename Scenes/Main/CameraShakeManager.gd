@@ -49,9 +49,9 @@ func _process(delta):
 	get_parent().get_node("BackgroundColor").color = currentcol
 
 #jerks the camera in a certain direction after which it will linerly recover
-func recoil(direction,framelength,offsetlength):
-	jerklength = offsetlength
-	recoiltime = framelength
+func recoil(direction : Vector2, length : float, offset : float):
+	jerklength = offset
+	recoiltime = length
 	
 	jerkoff = direction.normalized()*jerklength
 	lastdirection = direction.normalized()
@@ -60,10 +60,10 @@ func recoil(direction,framelength,offsetlength):
 
 #flashes the screen a requested color after which fades to the second specified color. 
 #That color is then the resting color untill the function is called again 
-func flash(from,to,transitionframes):
+func flash(souce_color : Color, target_color : Color, transitionframes):
 	flashlength = transitionframes
-	fromcol = from
-	tocol = to
+	fromcol = souce_color
+	tocol = target_color
 	flashframe = flashlength
 
 #initiate camera shake

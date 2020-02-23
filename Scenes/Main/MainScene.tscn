@@ -1,0 +1,541 @@
+[gd_scene load_steps=35 format=2]
+
+[ext_resource path="res://Scenes/Main/Base.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Main/FontManager.gd" type="Script" id=2]
+[ext_resource path="res://Fonts/EditorFont.tres" type="DynamicFont" id=3]
+[ext_resource path="res://Scenes/Main/TextEffectManager.gd" type="Script" id=4]
+[ext_resource path="res://Scenes/EffectParameterSelector/EffectParameterSelector.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Effects/FlyingLetter/FlyingLetter.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Effects/OtherEffect/OtherEffect.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Effects/PasteEffect/PasteEffect.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Effects/DashEffect/DashEffect.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Effects/DotEffect/DotEffect.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Effects/ExclamationMarkEffect/ExclamationMarkEffect.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Effects/QuestionMarkEffect/QuestionMarkEffect.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Effects/Lazer/Lazer.tscn" type="PackedScene" id=13]
+[ext_resource path="res://Scenes/Main/CameraShakeManager.gd" type="Script" id=14]
+[ext_resource path="res://Scenes/Main/SoundManager.gd" type="Script" id=15]
+[ext_resource path="res://Sounds/keystroke.wav" type="AudioStream" id=16]
+[ext_resource path="res://Sounds/enter.wav" type="AudioStream" id=17]
+[ext_resource path="res://Scenes/NewEditor/Editor.gd" type="Script" id=18]
+[ext_resource path="res://Scenes/TabEdit/TabEdit.tscn" type="PackedScene" id=19]
+[ext_resource path="res://Scenes/FileSelect/FileDialog.tscn" type="PackedScene" id=20]
+[ext_resource path="res://Fonts/unicode.tres" type="DynamicFont" id=21]
+[ext_resource path="res://Scenes/NewEditor/images/left.png" type="Texture" id=22]
+[ext_resource path="res://Scenes/NewEditor/images/right.png" type="Texture" id=23]
+[ext_resource path="res://MainTheme.tres" type="Theme" id=24]
+[ext_resource path="res://Scenes/Main/ParticleEffectSpawner.gd" type="Script" id=25]
+
+[sub_resource type="Theme" id=1]
+default_font = ExtResource( 21 )
+FileDialog/colors/files_disabled = Color( 0, 0, 0, 0.7 )
+FileDialog/icons/folder = null
+FileDialog/icons/parent_folder = null
+FileDialog/icons/reload = null
+
+[sub_resource type="ImageTexture" id=2]
+
+[sub_resource type="ImageTexture" id=3]
+
+[sub_resource type="StyleBoxFlat" id=4]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 12.0
+content_margin_bottom = 32.0
+bg_color = Color( 0.12549, 0.12549, 0.12549, 1 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color( 0.258824, 0.258824, 0.258824, 1 )
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id=6]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color( 0.12549, 0.12549, 0.12549, 1 )
+border_blend = true
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+expand_margin_bottom = 2.0
+
+[sub_resource type="Theme" id=7]
+TabContainer/colors/font_color_bg = Color( 0.690196, 0.690196, 0.690196, 1 )
+TabContainer/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+TabContainer/colors/font_color_fg = Color( 0.941176, 0.941176, 0.941176, 1 )
+TabContainer/constants/hseparation = 4
+TabContainer/constants/label_valign_bg = 2
+TabContainer/constants/label_valign_fg = 0
+TabContainer/constants/side_margin = 8
+TabContainer/constants/top_margin = 24
+TabContainer/fonts/font = null
+TabContainer/icons/decrement = SubResource( 2 )
+TabContainer/icons/decrement_highlight = null
+TabContainer/icons/increment = SubResource( 3 )
+TabContainer/icons/increment_highlight = null
+TabContainer/icons/menu = null
+TabContainer/icons/menu_highlight = null
+TabContainer/styles/panel = SubResource( 4 )
+TabContainer/styles/tab_bg = SubResource( 5 )
+TabContainer/styles/tab_disabled = null
+TabContainer/styles/tab_fg = SubResource( 6 )
+
+[sub_resource type="StyleBoxEmpty" id=8]
+content_margin_bottom = 15.0
+
+[sub_resource type="GDScript" id=9]
+script/source = "extends Popup
+
+func on_meta_clicked(meta):
+	open_user_data_directory()
+
+func open_user_data_directory():
+	OS.shell_open(OS.get_user_data_dir())
+"
+
+[node name="Base" type="CanvasLayer"]
+script = ExtResource( 1 )
+
+[node name="FontSizeManager" type="Node" parent="."]
+script = ExtResource( 2 )
+editor_font = ExtResource( 3 )
+
+[node name="TextEffectManager" type="Node" parent="."]
+editor/display_folded = true
+script = ExtResource( 4 )
+camera_manager_p = NodePath("../CameraManager")
+particle_effect_spawner_p = NodePath("../ParticleEffectSpawner")
+sound_manager_p = NodePath("../SoundManager")
+
+[node name="OtherOneRemoval" parent="TextEffectManager" instance=ExtResource( 5 )]
+editor/display_folded = true
+visible = false
+z_index = 10
+recoil_offset = 4
+recoil_time = 0.2
+flash_time = 0.2
+is_color_random = false
+flash_color = Color( 1, 0, 1, 1 )
+effect_scene = ExtResource( 6 )
+sound_name = "Keystroke"
+sound_volume_db = -8.0
+
+[node name="Start" parent="TextEffectManager/OtherOneRemoval" index="1"]
+position = Vector2( 4, 4 )
+
+[node name="End" parent="TextEffectManager/OtherOneRemoval" index="2"]
+position = Vector2( -4, 4 )
+
+[node name="DebugPreview" parent="TextEffectManager/OtherOneRemoval" index="3"]
+buffer_size = 60
+
+[node name="OtherOneAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
+visible = false
+recoil_offset = 2
+recoil_time = 0.1
+flash_time = 0.1
+is_color_random = true
+flash_color = Color( 0, 0, 0, 1 )
+effect_scene = ExtResource( 7 )
+sound_name = "Keystroke"
+sound_volume_db = -8.0
+
+[node name="Paste" parent="TextEffectManager" instance=ExtResource( 5 )]
+visible = false
+recoil_offset = 4
+recoil_time = 0.1
+flash_time = 0.1
+is_color_random = true
+flash_color = Color( 0, 0, 0, 1 )
+effect_scene = ExtResource( 8 )
+sound_name = "Keystroke"
+sound_volume_db = -5.0
+
+[node name="DashAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
+editor/display_folded = true
+visible = false
+recoil_offset = 4
+recoil_time = 0.2
+flash_time = 0.2
+is_color_random = true
+flash_color = Color( 0, 0, 0, 1 )
+effect_scene = ExtResource( 9 )
+sound_name = "Keystroke"
+sound_volume_db = -5.0
+
+[node name="Start" parent="TextEffectManager/DashAdd" index="1"]
+position = Vector2( 10, 10 )
+
+[node name="End" parent="TextEffectManager/DashAdd" index="2"]
+position = Vector2( -10, 10 )
+
+[node name="DebugPreview" parent="TextEffectManager/DashAdd" index="3"]
+buffer_size = 60
+
+[node name="DotAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
+editor/display_folded = true
+visible = false
+recoil_offset = 5
+recoil_time = 0.05
+flash_time = 2.0
+is_color_random = true
+flash_color = Color( 0, 0, 0, 1 )
+effect_scene = ExtResource( 10 )
+sound_name = "Keystroke"
+sound_volume_db = 0.0
+
+[node name="Start" parent="TextEffectManager/DotAdd" index="1"]
+position = Vector2( 99, 9 )
+
+[node name="End" parent="TextEffectManager/DotAdd" index="2"]
+position = Vector2( 99, 9 )
+
+[node name="DebugPreview" parent="TextEffectManager/DotAdd" index="3"]
+buffer_size = 60
+
+[node name="ExplamationAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
+editor/display_folded = true
+visible = false
+recoil_offset = 8
+recoil_time = 0.05
+flash_time = 0.2
+is_color_random = true
+flash_color = Color( 0, 0, 0, 1 )
+effect_scene = ExtResource( 11 )
+sound_name = "Keystroke"
+sound_volume_db = 0.0
+
+[node name="Start" parent="TextEffectManager/ExplamationAdd" index="1"]
+position = Vector2( 9, 19 )
+
+[node name="End" parent="TextEffectManager/ExplamationAdd" index="2"]
+position = Vector2( 9, 19 )
+
+[node name="DebugPreview" parent="TextEffectManager/ExplamationAdd" index="3"]
+buffer_size = 60
+
+[node name="QuestionAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
+editor/display_folded = true
+visible = false
+recoil_offset = 8
+recoil_time = 0.05
+flash_time = 0.2
+is_color_random = true
+flash_color = Color( 0, 0, 0, 1 )
+effect_scene = ExtResource( 12 )
+sound_name = "Keystroke"
+sound_volume_db = 0.0
+
+[node name="Start" parent="TextEffectManager/QuestionAdd" index="1"]
+position = Vector2( 9, 19 )
+
+[node name="End" parent="TextEffectManager/QuestionAdd" index="2"]
+position = Vector2( 9, 19 )
+
+[node name="DebugPreview" parent="TextEffectManager/QuestionAdd" index="3"]
+buffer_size = 60
+
+[node name="WhiteSpaceAdded" parent="TextEffectManager" instance=ExtResource( 5 )]
+visible = false
+recoil_offset = 4
+recoil_time = 0.2
+flash_time = 0.2
+is_color_random = true
+flash_color = Color( 0, 0, 0, 1 )
+effect_scene = null
+sound_name = "Keystroke"
+sound_volume_db = -5.0
+
+[node name="Lazer" parent="TextEffectManager" instance=ExtResource( 5 )]
+editor/display_folded = true
+visible = false
+recoil_offset = 8
+recoil_time = 0.4
+flash_time = 0.4
+is_color_random = false
+flash_color = Color( 1, 0.501961, 0, 1 )
+effect_scene = ExtResource( 13 )
+sound_name = "Ding"
+sound_volume_db = -5.0
+
+[node name="Start" parent="TextEffectManager/Lazer" index="1"]
+position = Vector2( 10, -10 )
+
+[node name="End" parent="TextEffectManager/Lazer" index="2"]
+position = Vector2( 10, 10 )
+
+[node name="DebugPreview" parent="TextEffectManager/Lazer" index="3"]
+buffer_size = 60
+
+[node name="CameraManager" type="Node" parent="."]
+script = ExtResource( 14 )
+
+[node name="SoundManager" type="Node" parent="."]
+script = ExtResource( 15 )
+
+[node name="Keystroke" type="AudioStreamPlayer" parent="SoundManager"]
+stream = ExtResource( 16 )
+volume_db = -5.0
+
+[node name="Ding" type="AudioStreamPlayer" parent="SoundManager"]
+stream = ExtResource( 17 )
+
+[node name="BackgroundColor" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -67.1573
+margin_top = -64.4718
+margin_right = 110.843
+margin_bottom = 98.5282
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="UI" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true
+}
+
+[node name="TotalContainer" type="VBoxContainer" parent="UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.5
+margin_top = 12.0
+margin_right = -20.5
+margin_bottom = -12.0
+size_flags_horizontal = 9
+size_flags_vertical = 9
+
+[node name="Editor" type="Control" parent="UI/TotalContainer"]
+margin_right = 983.0
+margin_bottom = 548.0
+size_flags_horizontal = 11
+size_flags_vertical = 11
+script = ExtResource( 18 )
+effect_manager_path = NodePath("../../../TextEffectManager")
+effect_manager_on_text_added = "text_added"
+effect_manager_on_text_removed = "text_removed"
+hint_path = NodePath("../EditorHint")
+packed_editor_scene = ExtResource( 19 )
+tab_left_margin = 2.0
+tab_right_margin = 2.0
+
+[node name="ActualEditorContainer" type="Control" parent="UI/TotalContainer/Editor"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 11
+size_flags_vertical = 11
+
+[node name="FileDialog" parent="UI/TotalContainer/Editor/ActualEditorContainer" instance=ExtResource( 20 )]
+margin_top = 20.0
+theme = SubResource( 1 )
+pop_up_offset = Vector2( 0, 10 )
+
+[node name="TabContainer" type="TabContainer" parent="UI/TotalContainer/Editor/ActualEditorContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+size_flags_horizontal = 11
+size_flags_vertical = 11
+theme = SubResource( 7 )
+custom_fonts/font = ExtResource( 21 )
+tab_align = 0
+
+[node name="MoreTabsLeft" type="TextureRect" parent="UI/TotalContainer/Editor/ActualEditorContainer"]
+visible = false
+margin_left = -4.5
+margin_right = 4.5
+margin_bottom = 16.0
+texture = ExtResource( 22 )
+stretch_mode = 3
+
+[node name="MoreTabsRight" type="TextureRect" parent="UI/TotalContainer/Editor/ActualEditorContainer"]
+visible = false
+margin_left = 978.5
+margin_right = 987.5
+margin_bottom = 16.0
+texture = ExtResource( 23 )
+stretch_mode = 3
+
+[node name="Hint" type="Label" parent="UI/TotalContainer/Editor/ActualEditorContainer"]
+visible = false
+margin_top = 552.0
+margin_right = 983.0
+margin_bottom = 576.0
+custom_styles/normal = SubResource( 8 )
+custom_fonts/font = ExtResource( 21 )
+text = "Test String"
+align = 1
+valign = 1
+
+[node name="CloseDialog" type="ConfirmationDialog" parent="UI/TotalContainer/Editor/ActualEditorContainer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -35.0
+margin_right = 100.0
+margin_bottom = 35.0
+popup_exclusive = true
+window_title = "Close?"
+dialog_text = "You have unsaved changes, close anyway?"
+
+[node name="Help" type="Popup" parent="UI/TotalContainer/Editor/ActualEditorContainer"]
+visible = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 24 )
+script = SubResource( 9 )
+
+[node name="Background" type="Panel" parent="UI/TotalContainer/Editor/ActualEditorContainer/Help"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="UI/TotalContainer/Editor/ActualEditorContainer/Help/Background"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 12.0
+margin_top = 12.0
+margin_right = -12.0
+margin_bottom = -12.0
+text = "Editor:
+    Switch tab : Ctrl+[ and ctrl+]
+    Move tab   : Ctrl+Alt+[ and Ctrl+Alt+]
+    Change size: Ctrl+= and Ctrl+-
+File select:
+    Select next: Tab
+    Select prev: Shift+Tab
+Settings:
+"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/TotalContainer/Editor/ActualEditorContainer/Help/Background"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/line_separation = 5
+bbcode_enabled = true
+bbcode_text = "Editor:
+
+	Switch tab : Ctrl+[ and ctrl+]
+	Move tab   : Ctrl+Alt+[ and Ctrl+Alt+]
+	Change size: Ctrl+= and Ctrl+-
+	
+File select:
+
+	Select next: Tab
+	Select prev: Shift+Tab
+	"
+text = "Editor:
+
+	Switch tab : Ctrl+[ and ctrl+]
+	Move tab   : Ctrl+Alt+[ and Ctrl+Alt+]
+	Change size: Ctrl+= and Ctrl+-
+	
+File select:
+
+	Select next: Tab
+	Select prev: Shift+Tab
+	"
+
+[node name="EditorHint" type="Label" parent="UI/TotalContainer"]
+margin_top = 552.0
+margin_right = 983.0
+margin_bottom = 576.0
+custom_styles/normal = SubResource( 8 )
+custom_fonts/font = ExtResource( 21 )
+text = "F1:Save F2:save AS f3:load f4:new file f5:settings f6:help"
+align = 1
+valign = 1
+uppercase = true
+
+[node name="FileLoadSelectHint" type="Label" parent="UI/TotalContainer"]
+visible = false
+margin_top = 552.0
+margin_right = 983.0
+margin_bottom = 576.0
+custom_styles/normal = SubResource( 8 )
+custom_fonts/font = ExtResource( 21 )
+text = "esc:back f5:refresh"
+align = 1
+valign = 1
+uppercase = true
+
+[node name="FileSaveSelectHint" type="Label" parent="UI/TotalContainer"]
+visible = false
+margin_top = 552.0
+margin_right = 983.0
+margin_bottom = 576.0
+custom_styles/normal = SubResource( 8 )
+custom_fonts/font = ExtResource( 21 )
+text = "esc:back f4:create folder f5:refresh"
+align = 1
+valign = 1
+uppercase = true
+
+[node name="SettingsHint" type="Label" parent="UI/TotalContainer"]
+visible = false
+margin_top = 524.0
+margin_right = 983.0
+margin_bottom = 548.0
+custom_styles/normal = SubResource( 8 )
+custom_fonts/font = ExtResource( 21 )
+text = "Esc:back"
+align = 1
+valign = 1
+uppercase = true
+
+[node name="HelpHint" type="Label" parent="UI/TotalContainer"]
+visible = false
+margin_top = 552.0
+margin_right = 983.0
+margin_bottom = 576.0
+custom_styles/normal = SubResource( 8 )
+custom_fonts/font = ExtResource( 21 )
+text = "Esc:back"
+align = 1
+valign = 1
+uppercase = true
+
+[node name="ParticleEffectSpawner" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 25 )
+__meta__ = {
+"_edit_lock_": true
+}
+[connection signal="item_rect_changed" from="UI/TotalContainer/Editor" to="UI/TotalContainer/Editor" method="_on_editor_resized"]
+[connection signal="on_font_size_decrease" from="UI/TotalContainer/Editor" to="FontSizeManager" method="decrease_editor_font"]
+[connection signal="on_font_size_increase" from="UI/TotalContainer/Editor" to="FontSizeManager" method="increase_editor_font"]
+[connection signal="file_selected" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/Editor" method="on_file_pop_up_result"]
+[connection signal="on_popup_load" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="show"]
+[connection signal="on_popup_save" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileSaveSelectHint" method="show"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/Editor" method="on_file_pop_up_closed"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="hide"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileSaveSelectHint" method="hide"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/EditorHint" method="show"]
+[connection signal="confirmed" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="UI/TotalContainer/Editor" method="_close_current_tab"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="UI/TotalContainer/Editor" method="_set_is_input_enabled" binds= [ true ]]
+[connection signal="about_to_show" from="UI/TotalContainer/Editor/ActualEditorContainer/Help" to="UI/TotalContainer/HelpHint" method="show"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/Help" to="UI/TotalContainer/Editor" method="on_generic_pop_up_finish"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/Help" to="UI/TotalContainer/HelpHint" method="hide"]
+[connection signal="meta_clicked" from="UI/TotalContainer/Editor/ActualEditorContainer/Help/Background/RichTextLabel" to="UI/TotalContainer/Editor/ActualEditorContainer/Help" method="on_meta_clicked"]
+
+[editable path="TextEffectManager/OtherOneRemoval"]
+
+[editable path="TextEffectManager/DashAdd"]
+
+[editable path="TextEffectManager/DotAdd"]
+
+[editable path="TextEffectManager/ExplamationAdd"]
+
+[editable path="TextEffectManager/QuestionAdd"]
+
+[editable path="TextEffectManager/Lazer"]

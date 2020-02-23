@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scenes/SpecialLineEdit/SpacialLineEdit.gd" type="Script" id=1]
+
+[node name="SpacialLineEdit" type="LineEdit"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -454.0
+margin_bottom = -276.0
+caret_blink = true
+caret_blink_speed = 0.5
+script = ExtResource( 1 )
+character_pixel_offset = Vector2( 0, 2 )
+left_content_margin = 4
+right_content_margin = 10
+
+[node name="CurrentCharacterPosition" type="ColorRect" parent="."]
+visible = false
+margin_left = 6.0
+margin_top = 32.0
+margin_right = 8.0
+margin_bottom = 34.0
+color = Color( 1, 0, 0, 1 )
+
+[node name="CurrentCharacterPosition2" type="ColorRect" parent="."]
+visible = false
+margin_left = 6.0
+margin_top = 32.0
+margin_right = 8.0
+margin_bottom = 34.0
+color = Color( 0, 0.439216, 1, 1 )
+
+[node name="ResetBuffers" type="Timer" parent="."]
+one_shot = true
+[connection signal="timeout" from="ResetBuffers" to="." method="_reset_previous_buffers"]
