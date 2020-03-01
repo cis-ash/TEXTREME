@@ -35,16 +35,8 @@ func create_default_file(path):
 			_config_file.set_value(section, key, _settings[section][key])
 	_config_file.save(path)
 
-func apply_sound_volume():
-	var bus_idx = AudioServer.get_bus_index("Master")
-	if _settings["audio"]["mute"]:
-		AudioServer.set_bus_volume_db(bus_idx, -INF)
-	else:
-		var volume : int = _settings["audio"]["volume"]
-		volume = clamp(volume, 0, 100)
-		var linear_volume = volume / 100.0
-		var volume_db = linear2db(linear_volume)
-		AudioServer.set_bus_volume_db(bus_idx, volume_db)
+func notify_listeners():
+	get_tree().call_group("settings_listener", "on_settings_updated")
 
 func load_settings(path) -> bool:
 	var error := _config_file.load(path)
@@ -57,7 +49,7 @@ func load_settings(path) -> bool:
 			var value = _config_file.get_value(section, key, _settings[section][key])
 			if typeof(value) == typeof(_settings[section][key]):
 				_settings[section][key] = value
-	apply_sound_volume()
+	call_deferred("notify_listeners")
 	return true
 
 func get_setting(category, key):
