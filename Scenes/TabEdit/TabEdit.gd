@@ -11,8 +11,31 @@ var current_open_path := ""
 var current_file_name := "UNTITLED"
 var is_modified := false
 
+var prev_is_syntax_disabled := false
+
 func _ready():
 	update_editor_syntax(current_open_path.get_extension())
+
+func on_settings_updated():
+	text_edit.wrap_enabled = Config.get_setting("text_editor", "line_wrap")
+	text_edit.show_line_numbers = Config.get_setting("text_editor", 
+													"line_numbers")
+	var is_syntax_disabled : bool = Config.get_setting("text_editor", 
+													"disable_syntax")
+	
+	if is_syntax_disabled == prev_is_syntax_disabled:
+		return
+	
+	prev_is_syntax_disabled = is_syntax_disabled
+	
+	if is_syntax_disabled:
+		disable_editor_syntax()
+	else:
+		update_editor_syntax(current_open_path.get_extension())
+
+func set_is_editor_enabled(is_enabled : bool):
+	text_edit.set_is_editor_enabled(is_enabled)
+	on_settings_updated()
 
 func tab_editor_grab_focus():
 	text_edit.grab_focus()
@@ -49,6 +72,9 @@ func on_file_saved(path : String) -> String:
 	emit_signal("on_display_name_changed")
 	update_editor_syntax(current_open_path.get_extension())
 	return text_edit.get_text()
+
+func disable_editor_syntax():
+	text_edit.syntax_highlighting = false
 
 func update_editor_syntax(file_extention):
 	var info := File.new()

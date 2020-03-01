@@ -67,7 +67,7 @@ func _handle_recoil_flash_sound(data : EffectParameters, is_repeated : bool):
 		source_color = _get_random_color()
 	
 	#TODO fix hardcoded color
-	if Config.get_setting("sfx", "flashing_bg"):
+	if Config.get_setting("sfx", "flashing_intensity") > 0:
 		camera_manager.flash(source_color, Color(), data.flash_time)
 	
 	var actual_sound_volume := data.sound_volume_db

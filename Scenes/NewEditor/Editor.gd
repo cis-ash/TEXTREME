@@ -65,7 +65,9 @@ func _get_current_tab_idx() -> int:
 
 func _set_current_tab_idx(new_idx : int):
 	_unroll_tabs()
+	tab_container.get_current_tab_control().set_is_editor_enabled(false)
 	tab_container.current_tab = new_idx
+	tab_container.get_current_tab_control().set_is_editor_enabled(true)
 	_roll_tabs()
 	
 
@@ -108,7 +110,7 @@ func _close_current_tab(is_handing_rolls : bool = true):
 		_create_new_tab()
 	
 	tab_container.current_tab = actual_current
-	
+	tab_container.get_current_tab_control().set_is_editor_enabled(true)
 	_roll_tabs()
 	tab_container.get_current_tab_control().tab_editor_grab_focus()
 
@@ -174,6 +176,9 @@ func _on_file_dialog_show(is_loading_new : bool):
 	
 	is_disk_action_processed = false
 	
+
+func on_settings_updated():
+	tab_container.get_current_tab_control().on_settings_updated()
 
 func set_is_editor_hint_visible(new_value : bool):
 	if get_node(hint_path) != null:

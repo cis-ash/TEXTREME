@@ -281,7 +281,9 @@ margin_bottom = -12.0
 size_flags_horizontal = 9
 size_flags_vertical = 9
 
-[node name="Editor" type="Control" parent="UI/TotalContainer"]
+[node name="Editor" type="Control" parent="UI/TotalContainer" groups=[
+"settings_listener",
+]]
 margin_right = 983.0
 margin_bottom = 548.0
 size_flags_horizontal = 11

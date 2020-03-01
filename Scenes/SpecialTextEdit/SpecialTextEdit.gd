@@ -23,6 +23,10 @@ var old_text := ""
 var previous_added := ""
 var previous_removed := ""
 
+func set_is_editor_enabled(is_enabled : bool):
+	set_process(is_enabled)
+	readonly = !is_enabled
+
 func _reset_previous_buffers():
 	previous_added = ""
 	previous_removed = ""

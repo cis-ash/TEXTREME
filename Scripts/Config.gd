@@ -10,8 +10,14 @@ var _settings := {
 		"mute": false
 	},
 	"sfx" : {
-		"flashing_bg": true,
-		"shaking": true
+		"flashing_intensity": 100,
+		"shaking": true,
+		"writer_mode": false
+	},
+	"text_editor" : {
+		"line_wrap": true,
+		"line_numbers": true,
+		"disable_syntax": false
 	}
 }
 
