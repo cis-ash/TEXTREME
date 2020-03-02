@@ -249,6 +249,25 @@ func _save_current_tab_to_path(path : String) -> bool:
 	
 	return true
 
+func _load_tab_unique(path : String, is_read_only : bool) -> bool:
+	_unroll_tabs()
+	var is_found := false
+	var idx := 0
+	for i in tab_container.get_children():
+		if i.current_open_path == path:
+			is_found = true
+			break
+		idx += 1
+	
+	_roll_tabs()
+	
+	if is_found:
+		_set_current_tab_idx(idx)
+		return true
+	else:
+		return _load_new_tab_from_path(path)
+	
+
 func _load_new_tab_from_path(path : String) -> bool:
 	
 	var file : File = File.new()
@@ -263,12 +282,13 @@ func _load_new_tab_from_path(path : String) -> bool:
 	
 	var actual_current_tab := _get_current_tab_idx()
 	
-	_unroll_tabs()
 	var new_tab = _create_new_tab()
 	new_tab.on_file_opened(path, content)
+	_unroll_tabs()
 	tab_container.move_child(new_tab, actual_current_tab + 1)
 	tab_container.current_tab = actual_current_tab + 1
 	_update_name(actual_current_tab + 1)
+	new_tab.set_is_editor_enabled(true)
 	_roll_tabs()
 	
 #	tab_container.current_tab = actual_current_tab + 1 # - left_tab_stash.size()
@@ -468,6 +488,7 @@ func _process(delta : float):
 	elif Input.is_action_just_pressed("editor_decrease_font_size"):
 		emit_signal("on_font_size_decrease")
 	elif Input.is_action_just_pressed("editor_settings"):
+#		_load_tab_unique(Config.get_config_path(), false)
 		_load_new_tab_from_path(Config.get_config_path())
 	
 	more_tabs_left.visible = !left_tab_stash.empty()
