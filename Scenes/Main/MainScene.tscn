@@ -317,8 +317,8 @@ size_flags_vertical = 9
 [node name="Editor" type="Control" parent="UI/TotalContainer" groups=[
 "settings_listener",
 ]]
-margin_right = 983.0
-margin_bottom = 548.0
+margin_right = 985.0
+margin_bottom = 536.0
 size_flags_horizontal = 11
 size_flags_vertical = 11
 script = ExtResource( 18 )
@@ -361,8 +361,10 @@ stretch_mode = 3
 
 [node name="MoreTabsRight" type="TextureRect" parent="UI/TotalContainer/Editor/ActualEditorContainer"]
 visible = false
-margin_left = 978.5
-margin_right = 987.5
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -6.5
+margin_right = 2.5
 margin_bottom = 16.0
 texture = ExtResource( 23 )
 stretch_mode = 3
@@ -392,8 +394,8 @@ window_title = "Close?"
 dialog_text = "You have unsaved changes, close anyway?"
 
 [node name="EditorHint" type="Label" parent="UI/TotalContainer"]
-margin_top = 552.0
-margin_right = 983.0
+margin_top = 540.0
+margin_right = 985.0
 margin_bottom = 576.0
 custom_styles/normal = SubResource( 8 )
 custom_fonts/font = ExtResource( 21 )
