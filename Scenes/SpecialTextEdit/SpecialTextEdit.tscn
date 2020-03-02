@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Fonts/EditorFont.tres" type="DynamicFont" id=1]
-[ext_resource path="res://Scenes/SpecialTextEdit/SpecialTextEdit.gd" type="Script" id=2]
+[ext_resource path="res://MainTheme.tres" type="Theme" id=1]
+[ext_resource path="res://Fonts/EditorFont.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Scenes/SpecialTextEdit/SpecialTextEdit.gd" type="Script" id=3]
 
 [node name="SpecialTextEdit" type="TextEdit" groups=[
 "editor_font_users",
@@ -9,13 +10,14 @@
 margin_right = 269.0
 margin_bottom = 205.0
 mouse_filter = 2
-custom_fonts/font = ExtResource( 1 )
+theme = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
 custom_constants/line_spacing = 3
 highlight_current_line = true
 show_line_numbers = true
 context_menu_enabled = false
 wrap_enabled = true
-script = ExtResource( 2 )
+script = ExtResource( 3 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 modulate = Color( 1, 1, 1, 0.301961 )

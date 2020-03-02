@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://Scenes/Main/Base.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Main/FontManager.gd" type="Script" id=2]
@@ -23,8 +23,7 @@
 [ext_resource path="res://Fonts/unicode.tres" type="DynamicFont" id=21]
 [ext_resource path="res://Scenes/NewEditor/images/left.png" type="Texture" id=22]
 [ext_resource path="res://Scenes/NewEditor/images/right.png" type="Texture" id=23]
-[ext_resource path="res://MainTheme.tres" type="Theme" id=24]
-[ext_resource path="res://Scenes/Main/ParticleEffectSpawner.gd" type="Script" id=25]
+[ext_resource path="res://Scenes/Main/ParticleEffectSpawner.gd" type="Script" id=24]
 
 [sub_resource type="Theme" id=1]
 default_font = ExtResource( 21 )
@@ -85,16 +84,6 @@ TabContainer/styles/tab_fg = SubResource( 6 )
 [sub_resource type="StyleBoxEmpty" id=8]
 content_margin_bottom = 15.0
 
-[sub_resource type="GDScript" id=9]
-script/source = "extends Popup
-
-func on_meta_clicked(meta):
-	open_user_data_directory()
-
-func open_user_data_directory():
-	OS.shell_open(OS.get_user_data_dir())
-"
-
 [node name="Base" type="CanvasLayer"]
 script = ExtResource( 1 )
 
@@ -127,6 +116,9 @@ position = Vector2( 4, 4 )
 
 [node name="End" parent="TextEffectManager/OtherOneRemoval" index="2"]
 position = Vector2( -4, 4 )
+
+[node name="DebugPreview" parent="TextEffectManager/OtherOneRemoval" index="3"]
+buffer_size = 60
 
 [node name="OtherOneAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
 visible = false
@@ -162,6 +154,9 @@ position = Vector2( 10, 10 )
 [node name="End" parent="TextEffectManager/DashAdd" index="2"]
 position = Vector2( -10, 10 )
 
+[node name="DebugPreview" parent="TextEffectManager/DashAdd" index="3"]
+buffer_size = 60
+
 [node name="DotAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
 editor/display_folded = true
 visible = false
@@ -177,6 +172,9 @@ position = Vector2( 99, 9 )
 
 [node name="End" parent="TextEffectManager/DotAdd" index="2"]
 position = Vector2( 99, 9 )
+
+[node name="DebugPreview" parent="TextEffectManager/DotAdd" index="3"]
+buffer_size = 60
 
 [node name="ExplamationAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
 editor/display_folded = true
@@ -194,6 +192,9 @@ position = Vector2( 9, 19 )
 [node name="End" parent="TextEffectManager/ExplamationAdd" index="2"]
 position = Vector2( 9, 19 )
 
+[node name="DebugPreview" parent="TextEffectManager/ExplamationAdd" index="3"]
+buffer_size = 60
+
 [node name="QuestionAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
 editor/display_folded = true
 visible = false
@@ -209,6 +210,9 @@ position = Vector2( 9, 19 )
 
 [node name="End" parent="TextEffectManager/QuestionAdd" index="2"]
 position = Vector2( 9, 19 )
+
+[node name="DebugPreview" parent="TextEffectManager/QuestionAdd" index="3"]
+buffer_size = 60
 
 [node name="WhiteSpaceAdded" parent="TextEffectManager" instance=ExtResource( 5 )]
 visible = false
@@ -235,6 +239,9 @@ position = Vector2( 10, -10 )
 
 [node name="End" parent="TextEffectManager/Lazer" index="2"]
 position = Vector2( 10, 10 )
+
+[node name="DebugPreview" parent="TextEffectManager/Lazer" index="3"]
+buffer_size = 60
 
 [node name="CameraManager" type="Node" parent="."]
 script = ExtResource( 14 )
@@ -306,8 +313,6 @@ size_flags_vertical = 11
 [node name="FileDialog" parent="UI/TotalContainer/Editor/ActualEditorContainer" instance=ExtResource( 20 )]
 margin_top = 20.0
 theme = SubResource( 1 )
-current_dir = "C:/Users/levka/Documents/GitHub/TEXTREME"
-current_path = "C:/Users/levka/Documents/GitHub/TEXTREME/"
 pop_up_offset = Vector2( 0, 10 )
 
 [node name="TabContainer" type="TabContainer" parent="UI/TotalContainer/Editor/ActualEditorContainer"]
@@ -359,63 +364,6 @@ margin_bottom = 35.0
 popup_exclusive = true
 window_title = "Close?"
 dialog_text = "You have unsaved changes, close anyway?"
-
-[node name="Help" type="Popup" parent="UI/TotalContainer/Editor/ActualEditorContainer"]
-visible = true
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme = ExtResource( 24 )
-script = SubResource( 9 )
-
-[node name="Background" type="Panel" parent="UI/TotalContainer/Editor/ActualEditorContainer/Help"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="Label" type="Label" parent="UI/TotalContainer/Editor/ActualEditorContainer/Help/Background"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 12.0
-margin_top = 12.0
-margin_right = -12.0
-margin_bottom = -12.0
-text = "Editor:
-    Switch tab : Ctrl+[ and ctrl+]
-    Move tab   : Ctrl+Alt+[ and Ctrl+Alt+]
-    Change size: Ctrl+= and Ctrl+-
-File select:
-    Select next: Tab
-    Select prev: Shift+Tab
-Settings:
-"
-
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/TotalContainer/Editor/ActualEditorContainer/Help/Background"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_constants/line_separation = 5
-bbcode_enabled = true
-bbcode_text = "Editor:
-
-	Switch tab : Ctrl+[ and ctrl+]
-	Move tab   : Ctrl+Alt+[ and Ctrl+Alt+]
-	Change size: Ctrl+= and Ctrl+-
-	
-File select:
-
-	Select next: Tab
-	Select prev: Shift+Tab
-	"
-text = "Editor:
-
-	Switch tab : Ctrl+[ and ctrl+]
-	Move tab   : Ctrl+Alt+[ and Ctrl+Alt+]
-	Change size: Ctrl+= and Ctrl+-
-	
-File select:
-
-	Select next: Tab
-	Select prev: Shift+Tab
-	"
 
 [node name="EditorHint" type="Label" parent="UI/TotalContainer"]
 margin_top = 552.0
@@ -480,7 +428,7 @@ uppercase = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-script = ExtResource( 25 )
+script = ExtResource( 24 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -491,15 +439,11 @@ __meta__ = {
 [connection signal="on_popup_load" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="show"]
 [connection signal="on_popup_save" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileSaveSelectHint" method="show"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/Editor" method="on_file_pop_up_closed"]
-[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="hide"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/EditorHint" method="show"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="hide"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileSaveSelectHint" method="hide"]
 [connection signal="confirmed" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="UI/TotalContainer/Editor" method="_close_current_tab"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="UI/TotalContainer/Editor" method="_set_is_input_enabled" binds= [ true ]]
-[connection signal="about_to_show" from="UI/TotalContainer/Editor/ActualEditorContainer/Help" to="UI/TotalContainer/HelpHint" method="show"]
-[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/Help" to="UI/TotalContainer/HelpHint" method="hide"]
-[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/Help" to="UI/TotalContainer/Editor" method="on_generic_pop_up_finish"]
-[connection signal="meta_clicked" from="UI/TotalContainer/Editor/ActualEditorContainer/Help/Background/RichTextLabel" to="UI/TotalContainer/Editor/ActualEditorContainer/Help" method="on_meta_clicked"]
 
 [editable path="TextEffectManager/OtherOneRemoval"]
 

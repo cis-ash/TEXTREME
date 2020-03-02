@@ -10,11 +10,24 @@ var is_titled := false
 var current_open_path := ""
 var current_file_name := "UNTITLED"
 var is_modified := false
+var is_read_only := false
 
+var old_focus_mode := FOCUS_NONE
 var prev_is_syntax_disabled := false
 
 func _ready():
 	update_editor_syntax(current_open_path.get_extension())
+
+func set_is_readonly(new_value : bool):
+	var was_read_only := is_read_only
+	is_read_only = new_value
+	if is_read_only:
+		old_focus_mode = text_edit.focus_mode
+		text_edit.focus_mode = FOCUS_NONE
+		text_edit.highlight_current_line = false
+	elif was_read_only:
+		text_edit.focus_mode = old_focus_mode
+		text_edit.highlight_current_line = true
 
 func on_settings_updated():
 	text_edit.wrap_enabled = Config.get_setting("text_editor", "line_wrap")
@@ -34,7 +47,8 @@ func on_settings_updated():
 		update_editor_syntax(current_open_path.get_extension())
 
 func set_is_editor_enabled(is_enabled : bool):
-	text_edit.set_is_editor_enabled(is_enabled)
+	if !is_read_only:
+		text_edit.set_is_editor_enabled(is_enabled)
 	on_settings_updated()
 
 func tab_editor_grab_focus():

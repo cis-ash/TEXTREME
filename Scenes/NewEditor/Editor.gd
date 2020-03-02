@@ -265,7 +265,9 @@ func _load_tab_unique(path : String, is_read_only : bool) -> bool:
 		_set_current_tab_idx(idx)
 		return true
 	else:
-		return _load_new_tab_from_path(path)
+		var result := _load_new_tab_from_path(path)
+		tab_container.get_current_tab_control().set_is_readonly(is_read_only)
+		return result
 	
 
 func _load_new_tab_from_path(path : String) -> bool:
@@ -482,14 +484,15 @@ func _process(delta : float):
 		else:
 			_on_file_dialog_show(false)
 	elif Input.is_action_just_pressed("editor_help"):
-		generic_pop_up_start($ActualEditorContainer/Help)
+#		generic_pop_up_start($ActualEditorContainer/Help)
+		_load_tab_unique("res://TextResources/Help", true)
 	elif Input.is_action_just_pressed("editor_increase_font_size"):
 		emit_signal("on_font_size_increase")
 	elif Input.is_action_just_pressed("editor_decrease_font_size"):
 		emit_signal("on_font_size_decrease")
 	elif Input.is_action_just_pressed("editor_settings"):
-#		_load_tab_unique(Config.get_config_path(), false)
-		_load_new_tab_from_path(Config.get_config_path())
+		_load_tab_unique(Config.get_config_path(), false)
+#		_load_new_tab_from_path(Config.get_config_path())
 	
 	more_tabs_left.visible = !left_tab_stash.empty()
 	more_tabs_right.visible = !right_tab_stash.empty()
