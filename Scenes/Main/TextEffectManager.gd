@@ -57,7 +57,7 @@ func _get_random_color() -> Color:
 	return ColorN(flash_colors[randi() % flash_colors.size()])
 
 func _handle_recoil_flash_sound(data : EffectParameters, is_repeated : bool):
-	if Config.get_setting("sfx", "shaking"):
+	if Config.get_setting("sfx", "shaking_intensity") > 0:
 		camera_manager.recoil(data.get_random_vector(), data.recoil_time, data.recoil_offset)
 		camera_manager.slap(data.slap_offset)
 	
