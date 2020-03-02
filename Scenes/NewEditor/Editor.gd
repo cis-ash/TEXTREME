@@ -3,6 +3,11 @@ extends Control
 signal on_font_size_increase
 signal on_font_size_decrease
 
+signal on_tab_switched_left
+signal on_tab_switched_right
+signal on_special_key_registered
+signal on_tab_closed
+
 export var effect_manager_path : NodePath = ""
 export var effect_manager_on_text_added := ""
 export var effect_manager_on_text_removed := ""
@@ -250,6 +255,7 @@ func _save_current_tab_to_path(path : String) -> bool:
 	return true
 
 func _load_tab_unique(path : String, is_read_only : bool) -> bool:
+	var is_left := false
 	_unroll_tabs()
 	var is_found := false
 	var idx := 0
@@ -258,7 +264,6 @@ func _load_tab_unique(path : String, is_read_only : bool) -> bool:
 			is_found = true
 			break
 		idx += 1
-	
 	_roll_tabs()
 	
 	if is_found:
@@ -433,17 +438,23 @@ var checked_events := [
 func _get_total_tab_count() -> int:
 	return tab_container.get_child_count() + left_tab_stash.size() + right_tab_stash.size()
 
+func _play_tab_effect_based_on_prev(prev_idx : int):
+	if prev_idx - _get_current_tab_idx() < 0:
+		emit_signal("on_tab_switched_left")
+	else:
+		emit_signal("on_tab_switched_right")
+
 func _process(delta : float):
 	
 	update()
 	
-	var any := false
+	var is_any_event_active := false
 	for i in checked_events:
 		if Input.is_action_just_pressed(i):
-			any = true
+			is_any_event_active = true
 			break
 	
-	if !any:
+	if !is_any_event_active:
 		return
 	
 	var actual_current_tab := _get_current_tab_idx()
@@ -453,20 +464,25 @@ func _process(delta : float):
 		var new_tab = _create_new_tab()
 		_move_tab(_get_total_tab_count() - 1, actual_current_tab + 1)
 		_set_current_tab_idx(actual_current_tab + 1)
+		emit_signal("on_tab_switched_right")
 	elif Input.is_action_just_pressed("editor_move_tab_right"):
 		if actual_current_tab != _get_total_tab_count() - 1:
 			_move_tab(actual_current_tab, actual_current_tab + 1)
 			_set_current_tab_idx(actual_current_tab + 1)
+			emit_signal("on_tab_switched_right")
 	elif Input.is_action_just_pressed("editor_move_tab_left"):
 		if actual_current_tab != 0:
 			_move_tab(actual_current_tab, actual_current_tab - 1)
 			_set_current_tab_idx(actual_current_tab - 1)
+			emit_signal("on_tab_switched_left")
 	elif Input.is_action_just_pressed("editor_select_left_tab"):
 		if actual_current_tab != 0:
 			_set_current_tab_idx(actual_current_tab - 1)
+			emit_signal("on_tab_switched_left")
 	elif Input.is_action_just_pressed("editor_select_right_tab"):
 		if actual_current_tab != _get_total_tab_count() - 1:
 			_set_current_tab_idx(actual_current_tab + 1)
+			emit_signal("on_tab_switched_right")
 	elif Input.is_action_just_pressed("editor_close_tab"):
 		if tab_container.get_current_tab_control().get_is_file_modified():
 			_ask_close_permission()
@@ -485,13 +501,17 @@ func _process(delta : float):
 			_on_file_dialog_show(false)
 	elif Input.is_action_just_pressed("editor_help"):
 #		generic_pop_up_start($ActualEditorContainer/Help)
+		var prev_idx := _get_current_tab_idx()
 		_load_tab_unique("res://TextResources/Help", true)
+		_play_tab_effect_based_on_prev(prev_idx)
 	elif Input.is_action_just_pressed("editor_increase_font_size"):
 		emit_signal("on_font_size_increase")
 	elif Input.is_action_just_pressed("editor_decrease_font_size"):
 		emit_signal("on_font_size_decrease")
 	elif Input.is_action_just_pressed("editor_settings"):
+		var prev_idx := _get_current_tab_idx()
 		_load_tab_unique(Config.get_config_path(), false)
+		_play_tab_effect_based_on_prev(prev_idx)
 #		_load_new_tab_from_path(Config.get_config_path())
 	
 	more_tabs_left.visible = !left_tab_stash.empty()

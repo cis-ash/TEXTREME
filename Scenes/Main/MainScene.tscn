@@ -92,7 +92,6 @@ script = ExtResource( 2 )
 editor_font = ExtResource( 3 )
 
 [node name="TextEffectManager" type="Node" parent="."]
-editor/display_folded = true
 script = ExtResource( 4 )
 camera_manager_p = NodePath("../CameraManager")
 particle_effect_spawner_p = NodePath("../ParticleEffectSpawner")
@@ -223,6 +222,7 @@ sound_name = "Keystroke"
 sound_volume_db = -5.0
 
 [node name="Lazer" parent="TextEffectManager" instance=ExtResource( 5 )]
+editor/display_folded = true
 visible = false
 slap_offset = Vector2( 0, 50 )
 recoil_offset = 8
@@ -241,6 +241,32 @@ position = Vector2( 10, -10 )
 position = Vector2( 10, 10 )
 
 [node name="DebugPreview" parent="TextEffectManager/Lazer" index="3"]
+buffer_size = 60
+
+[node name="TabSwitchLeft" parent="TextEffectManager" instance=ExtResource( 5 )]
+editor/display_folded = true
+visible = false
+slap_offset = Vector2( -10, 0 )
+recoil_offset = 2
+recoil_time = 0.4
+flash_time = 0.4
+sound_name = "Keystroke"
+sound_volume_db = -8.0
+
+[node name="DebugPreview" parent="TextEffectManager/TabSwitchLeft" index="3"]
+buffer_size = 60
+
+[node name="TabSwitchRight" parent="TextEffectManager" instance=ExtResource( 5 )]
+editor/display_folded = true
+visible = false
+slap_offset = Vector2( -10, 0 )
+recoil_offset = 2
+recoil_time = 0.4
+flash_time = 0.4
+sound_name = "Keystroke"
+sound_volume_db = -8.0
+
+[node name="DebugPreview" parent="TextEffectManager/TabSwitchRight" index="3"]
 buffer_size = 60
 
 [node name="CameraManager" type="Node" parent="."]
@@ -435,12 +461,14 @@ __meta__ = {
 [connection signal="item_rect_changed" from="UI/TotalContainer/Editor" to="UI/TotalContainer/Editor" method="_on_editor_resized"]
 [connection signal="on_font_size_decrease" from="UI/TotalContainer/Editor" to="FontSizeManager" method="decrease_editor_font"]
 [connection signal="on_font_size_increase" from="UI/TotalContainer/Editor" to="FontSizeManager" method="increase_editor_font"]
+[connection signal="on_tab_switched_left" from="UI/TotalContainer/Editor" to="TextEffectManager" method="play_camera_effect" binds= [ "TabSwitchLeft", false ]]
+[connection signal="on_tab_switched_right" from="UI/TotalContainer/Editor" to="TextEffectManager" method="play_camera_effect" binds= [ "TabSwitchRight", false ]]
 [connection signal="file_selected" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/Editor" method="on_file_pop_up_result"]
 [connection signal="on_popup_load" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="show"]
 [connection signal="on_popup_save" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileSaveSelectHint" method="show"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/Editor" method="on_file_pop_up_closed"]
-[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/EditorHint" method="show"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="hide"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/EditorHint" method="show"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileSaveSelectHint" method="hide"]
 [connection signal="confirmed" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="UI/TotalContainer/Editor" method="_close_current_tab"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="UI/TotalContainer/Editor" method="_set_is_input_enabled" binds= [ true ]]
@@ -456,3 +484,7 @@ __meta__ = {
 [editable path="TextEffectManager/QuestionAdd"]
 
 [editable path="TextEffectManager/Lazer"]
+
+[editable path="TextEffectManager/TabSwitchLeft"]
+
+[editable path="TextEffectManager/TabSwitchRight"]

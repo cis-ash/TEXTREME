@@ -10,6 +10,15 @@ onready var sound_manager = get_node(sound_manager_p)
 
 var flash_colors := ["cyan","magenta","orchid", "pink", "orangered", "dodgerblue", "orange", "turquoise", "violet", "teal"]
 
+func play_camera_effect(effect_name : String, is_repeated : bool):
+	var data : EffectParameters = get_node(effect_name)
+	
+	if data == null:
+		printerr("Cant play effect called ", effect_name, " !")
+	else:
+		_handle_recoil_flash_sound(data, is_repeated)
+	
+
 func text_added(string : String, positions : PoolVector2Array, position_before_first : Vector2, font : Font, is_repeated : bool):
 	
 	#One character added
@@ -32,11 +41,13 @@ func text_added(string : String, positions : PoolVector2Array, position_before_f
 			_:
 				data = $OtherOneAdd
 		
-		particle_effect_spawner.spawn_scene(string, positions, position_before_first, data.effect_scene, font)
+		particle_effect_spawner.spawn_scene(string, positions, position_before_first, 
+				data.effect_scene, font)
 		_handle_recoil_flash_sound(data, is_repeated)
 	else:
 		var data : EffectParameters = $Paste
-		particle_effect_spawner.spawn_scene(string, positions, position_before_first, data.effect_scene, font)
+		particle_effect_spawner.spawn_scene(string, positions, position_before_first,
+				data.effect_scene, font)
 		_handle_recoil_flash_sound(data, is_repeated)
 	
 
@@ -47,7 +58,8 @@ func text_removed(string : String, positions : PoolVector2Array, position_before
 	var data : EffectParameters = $OtherOneRemoval
 	
 	while idx < positions.size():
-		particle_effect_spawner.spawn_scene(string[idx], [positions[idx]], position_before_first, data.effect_scene, font)
+		particle_effect_spawner.spawn_scene(string[idx], [positions[idx]], position_before_first, 
+				data.effect_scene, font)
 		idx += 1
 	
 	_handle_recoil_flash_sound(data, is_repeated)
