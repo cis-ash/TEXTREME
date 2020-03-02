@@ -2,6 +2,9 @@ tool
 extends Polygon2D
 class_name EffectParameters
 
+#the slap offset that will be sent to the camera
+export var slap_offset:= Vector2(0,0)
+
 #How much screen recoils with this effect applied
 export var recoil_offset := 0
 #How long it takes to recover from effect
