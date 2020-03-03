@@ -11,7 +11,8 @@ var _settings := {
 	"sfx" : {
 		"flashing_intensity": 100,
 		"shaking_intensity": 100,
-		"writer_mode": false
+		"writer_mode": false,
+		"sound_set": 0
 	},
 	"text_editor" : {
 		"line_wrap": true,

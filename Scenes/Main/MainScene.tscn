@@ -303,11 +303,13 @@ script = ExtResource( 14 )
 ]]
 script = ExtResource( 15 )
 
-[node name="Keystroke" type="AudioStreamPlayer" parent="SoundManager"]
+[node name="Default" type="Node" parent="SoundManager"]
+
+[node name="Keystroke" type="AudioStreamPlayer" parent="SoundManager/Default"]
 stream = ExtResource( 16 )
 volume_db = -5.0
 
-[node name="Ding" type="AudioStreamPlayer" parent="SoundManager"]
+[node name="Ding" type="AudioStreamPlayer" parent="SoundManager/Default"]
 stream = ExtResource( 17 )
 
 [node name="BackgroundColor" type="ColorRect" parent="."]
