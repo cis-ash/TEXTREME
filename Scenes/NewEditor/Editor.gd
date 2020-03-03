@@ -6,7 +6,11 @@ signal on_font_size_decrease
 signal on_tab_switched_left
 signal on_tab_switched_right
 signal on_special_key_registered
-signal on_tab_closed
+signal on_file_dialog_popup
+signal on_save_success
+signal on_save_fail
+signal on_load_success
+signal on_load_fail
 
 export var effect_manager_path : NodePath = ""
 export var effect_manager_on_text_added := ""
@@ -180,7 +184,7 @@ func _on_file_dialog_show(is_loading_new : bool):
 	file_dialog.pop_up_in_rect(Rect2(global_rect_pos, global_rect_size))
 	
 	is_disk_action_processed = false
-	
+	emit_signal("on_file_dialog_popup")
 
 func on_settings_updated():
 	tab_container.get_current_tab_control().on_settings_updated()
@@ -324,12 +328,35 @@ func on_file_pop_up_result(path : String):
 	tab_container.current_tab = desired_position - left_tab_stash.size()
 #	print(path)
 	
-	if !result:
-		#TODO POPUP to say failed to save/load
-		pass
+	if is_loading:
+		if !result:
+			_on_save_failed()
+		else:
+			_on_save_success()
+	else:
+		if !result:
+			_on_load_failed()
+		else:
+			_on_load_success()
 	
 	_set_is_input_enabled(true)
 	
+
+func _on_load_failed():
+	#TODO Popup effect
+	emit_signal("on_load_fail")
+
+func _on_load_success():
+	#TODO Popup effect
+	emit_signal("on_load_success")
+
+func _on_save_failed():
+	#TODO Popup effect
+	emit_signal("on_save_fail")
+
+func _on_save_success():
+	#TODO Popup effect
+	emit_signal("on_save_success")
 
 func _unroll_tabs():
 	
@@ -489,6 +516,7 @@ func _process(delta : float):
 		else:
 			_close_current_tab()
 			_set_current_tab_idx(max(desired_current_tab - 1, 0))
+			emit_signal("on_tab_closed")
 	elif Input.is_action_just_pressed("editor_load"):
 		_on_file_dialog_show(true)
 	elif Input.is_action_just_pressed("editor_save_as"):
