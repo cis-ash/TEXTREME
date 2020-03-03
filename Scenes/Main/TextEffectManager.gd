@@ -45,7 +45,19 @@ func text_added(string : String, positions : PoolVector2Array, position_before_f
 				data.effect_scene, font)
 		_handle_recoil_flash_sound(data, is_repeated)
 	else:
-		var data : EffectParameters = $Paste
+		
+		var data : EffectParameters = null
+		print(string.c_escape())
+		var are_all_white_spaces := true
+		for i in string:
+			if not i in [" ", "\t", "\n"]:
+				are_all_white_spaces = false
+				break
+		
+		if are_all_white_spaces && string[0] == "\n":
+			data = $Lazer
+		else:
+			data = $Paste
 		particle_effect_spawner.spawn_scene(string, positions, position_before_first,
 				data.effect_scene, font)
 		_handle_recoil_flash_sound(data, is_repeated)
