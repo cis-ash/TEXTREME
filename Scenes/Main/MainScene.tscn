@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://Scenes/Main/Base.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Main/FontManager.gd" type="Script" id=2]
@@ -23,7 +23,8 @@
 [ext_resource path="res://Fonts/unicode.tres" type="DynamicFont" id=21]
 [ext_resource path="res://Scenes/NewEditor/images/left.png" type="Texture" id=22]
 [ext_resource path="res://Scenes/NewEditor/images/right.png" type="Texture" id=23]
-[ext_resource path="res://Scenes/Main/ParticleEffectSpawner.gd" type="Script" id=24]
+[ext_resource path="res://Scenes/Main/FilePopupSpawner.gd" type="Script" id=24]
+[ext_resource path="res://Scenes/Main/ParticleEffectSpawner.gd" type="Script" id=25]
 
 [sub_resource type="Theme" id=1]
 default_font = ExtResource( 21 )
@@ -342,7 +343,7 @@ size_flags_vertical = 9
 [node name="Editor" type="Control" parent="UI/TotalContainer" groups=[
 "settings_listener",
 ]]
-margin_right = 985.0
+margin_right = 983.0
 margin_bottom = 548.0
 size_flags_horizontal = 11
 size_flags_vertical = 11
@@ -420,7 +421,7 @@ dialog_text = "You have unsaved changes, close anyway?"
 
 [node name="EditorHint" type="Label" parent="UI/TotalContainer"]
 margin_top = 552.0
-margin_right = 985.0
+margin_right = 983.0
 margin_bottom = 576.0
 custom_styles/normal = SubResource( 8 )
 custom_fonts/font = ExtResource( 21 )
@@ -477,11 +478,16 @@ align = 1
 valign = 1
 uppercase = true
 
+[node name="FilePopupSpawner" type="Control" parent="UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 24 )
+
 [node name="ParticleEffectSpawner" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-script = ExtResource( 24 )
+script = ExtResource( 25 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -489,15 +495,20 @@ __meta__ = {
 [connection signal="on_file_dialog_popup" from="UI/TotalContainer/Editor" to="TextEffectManager" method="play_camera_effect" binds= [ "EditorFileDialogShow", false ]]
 [connection signal="on_font_size_decrease" from="UI/TotalContainer/Editor" to="FontSizeManager" method="decrease_editor_font"]
 [connection signal="on_font_size_increase" from="UI/TotalContainer/Editor" to="FontSizeManager" method="increase_editor_font"]
+[connection signal="on_load_fail" from="UI/TotalContainer/Editor" to="UI/FilePopupSpawner" method="on_load_completed" binds= [ false ]]
+[connection signal="on_load_success" from="UI/TotalContainer/Editor" to="UI/FilePopupSpawner" method="on_load_completed" binds= [ true ]]
+[connection signal="on_save_fail" from="UI/TotalContainer/Editor" to="UI/FilePopupSpawner" method="on_save_completed" binds= [ false ]]
+[connection signal="on_save_success" from="UI/TotalContainer/Editor" to="UI/FilePopupSpawner" method="on_save_completed" binds= [ true ]]
+[connection signal="on_tab_closed" from="UI/TotalContainer/Editor" to="TextEffectManager" method="play_camera_effect" binds= [ "EditorTabClosed", false ]]
 [connection signal="on_tab_switched_left" from="UI/TotalContainer/Editor" to="TextEffectManager" method="play_camera_effect" binds= [ "TabSwitchLeft", false ]]
 [connection signal="on_tab_switched_right" from="UI/TotalContainer/Editor" to="TextEffectManager" method="play_camera_effect" binds= [ "TabSwitchRight", false ]]
 [connection signal="file_selected" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/Editor" method="on_file_pop_up_result"]
 [connection signal="on_popup_load" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="show"]
 [connection signal="on_popup_save" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileSaveSelectHint" method="show"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/Editor" method="on_file_pop_up_closed"]
-[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="hide"]
-[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/EditorHint" method="show"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileSaveSelectHint" method="hide"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/EditorHint" method="show"]
+[connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="hide"]
 [connection signal="confirmed" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="TextEffectManager" method="play_camera_effect" binds= [ "EditorTabClosed", false ]]
 [connection signal="confirmed" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="UI/TotalContainer/Editor" method="_close_current_tab"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="UI/TotalContainer/Editor" method="_set_is_input_enabled" binds= [ true ]]

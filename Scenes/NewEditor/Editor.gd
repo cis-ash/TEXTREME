@@ -5,12 +5,12 @@ signal on_font_size_decrease
 
 signal on_tab_switched_left
 signal on_tab_switched_right
-signal on_special_key_registered
 signal on_file_dialog_popup
 signal on_save_success
 signal on_save_fail
 signal on_load_success
 signal on_load_fail
+signal on_tab_closed
 
 export var effect_manager_path : NodePath = ""
 export var effect_manager_on_text_added := ""
@@ -241,6 +241,7 @@ func _save_current_tab_to_path(path : String) -> bool:
 	file.open(path, File.WRITE)
 	
 	if !file.is_open():
+		emit_signal("on_save_fail")
 		return false
 	
 	var actual_current_tab := _get_current_tab_idx()
@@ -256,6 +257,7 @@ func _save_current_tab_to_path(path : String) -> bool:
 	file.store_string(content)
 	file.close()
 	
+	emit_signal("on_save_success")
 	return true
 
 func _load_tab_unique(path : String, is_read_only : bool) -> bool:
@@ -285,6 +287,7 @@ func _load_new_tab_from_path(path : String) -> bool:
 	file.open(path, File.READ)
 	
 	if !file.is_open():
+		emit_signal("on_load_fail")
 		return false
 	
 	var content := file.get_as_text()
@@ -303,7 +306,7 @@ func _load_new_tab_from_path(path : String) -> bool:
 	_roll_tabs()
 	
 #	tab_container.current_tab = actual_current_tab + 1 # - left_tab_stash.size()
-	
+	emit_signal("on_load_success")
 	return true
 
 func _ask_close_permission():
@@ -328,27 +331,8 @@ func on_file_pop_up_result(path : String):
 	tab_container.current_tab = desired_position - left_tab_stash.size()
 #	print(path)
 	
-	if is_loading:
-		if !result:
-			_on_save_failed()
-		else:
-			_on_save_success()
-	else:
-		if !result:
-			_on_load_failed()
-		else:
-			_on_load_success()
-	
 	_set_is_input_enabled(true)
 	
-
-func _on_load_failed():
-	#TODO Popup effect
-	emit_signal("on_load_fail")
-
-func _on_load_success():
-	#TODO Popup effect
-	emit_signal("on_load_success")
 
 func _on_save_failed():
 	#TODO Popup effect
