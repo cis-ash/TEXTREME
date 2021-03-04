@@ -1,0 +1,131 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Scenes/EffectParameterSelector/EffectParameterSelector.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/EffectParameterSelector/handle.png" type="Texture" id=2]
+[ext_resource path="res://Scenes/EffectParameterSelector/DebugRandomPreviewer.gd" type="Script" id=3]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float angle_start = 0.0;
+uniform float angle_end = 3.0;
+uniform float radius = 0.5;
+uniform float inner_radius = 0.48;
+uniform float delta_radius = 0.005;
+
+float double_smooth_step(float edge0, float edge1, float edge2, float edge3, float value) {
+	float step1 = smoothstep(edge0, edge1, value);
+	float step2 = smoothstep(edge2, edge3, value);
+	return min(step1, 1.0 - step2);
+}
+
+float find_min_dist(float angle1, float angle2) {
+	float tau = 2.0 * acos(-1);
+	float temp = min(abs((angle1 - angle2)), abs((angle1 + tau - angle2)));
+	return min(temp, abs((angle1 - angle2 - tau)));
+}
+
+float cross2d(vec2 a, vec2 b) {
+	return a.x * b.y - a.y * b.x;
+}
+
+void fragment() {
+	
+	float angle = atan(UV.y, UV.x);
+	
+	float r = radius;
+	float dr = delta_radius;
+	float ir = inner_radius;
+	
+	vec2 centered_uv = UV - vec2(0.5);
+	
+	//Finding opacity of the ring
+	float ring = double_smooth_step(r + dr, r - dr, ir + dr, ir - dr, length(centered_uv));
+	
+	float current_angle = atan(centered_uv.y, centered_uv.x);
+	
+	float angular_opacity = 0.0;
+	
+	float total_distance = find_min_dist(angle_start, angle_end);
+	float distance_to_current = find_min_dist(angle_start, current_angle) + find_min_dist(angle_end, current_angle);
+	
+	//Cut out opacity
+	if (total_distance + 0.001 >= distance_to_current)
+		angular_opacity = 1.0;
+	
+	vec2 start_vec = vec2(cos(angle_start), sin(angle_start));
+	vec2 end_vec = vec2(cos(angle_end), sin(angle_end));
+	
+	//Fix for flipping
+	if (cross2d(start_vec, end_vec) < 0.0)
+		angular_opacity = 1.0 - angular_opacity;
+	
+	//Combining ring opacity and cut out
+	float total_opacity = min(angular_opacity, ring);
+	
+	COLOR = vec4(total_opacity);
+	
+	}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/angle_start = 0.785398
+shader_param/angle_end = 2.35619
+shader_param/radius = 0.5
+shader_param/inner_radius = 0.48
+shader_param/delta_radius = 0.005
+
+[sub_resource type="ImageTexture" id=3]
+size = Vector2( 10, 10 )
+
+[node name="Selector" type="Polygon2D"]
+material = SubResource( 2 )
+position = Vector2( 32, 32 )
+texture = SubResource( 3 )
+polygon = PoolVector2Array( 32, -32, 32, 32, -32, 32, -32, -32 )
+uv = PoolVector2Array( 10, 0, 10, 10, 0, 10, 0, 0 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+sound_name = ""
+
+[node name="Center" type="Node2D" parent="."]
+editor/display_folded = true
+scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true
+}
+
+[node name="sprite" type="Sprite" parent="Center"]
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 2 )
+
+[node name="Start" type="Node2D" parent="."]
+editor/display_folded = true
+modulate = Color( 1, 0, 0, 1 )
+position = Vector2( 0.001, -20 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="sprite" type="Sprite" parent="Start"]
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 2 )
+
+[node name="End" type="Node2D" parent="."]
+editor/display_folded = true
+modulate = Color( 0, 0, 1, 1 )
+position = Vector2( 0, -25 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="sprite" type="Sprite" parent="End"]
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 2 )
+
+[node name="DebugPreview" type="Node2D" parent="."]
+visible = false
+script = ExtResource( 3 )

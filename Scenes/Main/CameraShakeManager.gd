@@ -19,6 +19,11 @@ var current_shake_offset = 0.0
 var shake_time_left = 0.0
 var current_recovery_length = 0.0
 
+var slap_spring_offset = 0.0
+var slap_spring_direction = Vector2(0,0);
+var slap_spring_lerp = 20.0;
+var slap_spring_speed = 0.0;
+
 func _process(delta):
 	
 	#the part that makes the camera actually shake
@@ -34,6 +39,12 @@ func _process(delta):
 	jerkoff.x = lerp(0, jerklength*lastdirection.x,recoilframe/recoiltime)
 	jerkoff.y = lerp(0, jerklength*lastdirection.y,recoilframe/recoiltime)
 	recoilframe = max(recoilframe-delta, 0)
+	
+	slap_spring_speed = lerp(slap_spring_speed, (0 - slap_spring_offset)/1, delta*slap_spring_lerp)
+	slap_spring_offset += slap_spring_speed*delta*60
+	
+	jerkoff += slap_spring_offset*slap_spring_direction
+	
 	get_parent().offset = jerkoff 
 	# to fix certain issues in the game it had to use a canvas layer as the main node. 
 	#Its glued to your screen so shaking the camera wont work. 
@@ -49,9 +60,9 @@ func _process(delta):
 	get_parent().get_node("BackgroundColor").color = currentcol
 
 #jerks the camera in a certain direction after which it will linerly recover
-func recoil(direction,framelength,offsetlength):
-	jerklength = offsetlength
-	recoiltime = framelength
+func recoil(direction : Vector2, length : float, offset : float):
+	jerklength = offset
+	recoiltime = length
 	
 	jerkoff = direction.normalized()*jerklength
 	lastdirection = direction.normalized()
@@ -60,10 +71,10 @@ func recoil(direction,framelength,offsetlength):
 
 #flashes the screen a requested color after which fades to the second specified color. 
 #That color is then the resting color untill the function is called again 
-func flash(from,to,transitionframes):
+func flash(souce_color : Color, target_color : Color, transitionframes):
 	flashlength = transitionframes
-	fromcol = from
-	tocol = to
+	fromcol = souce_color
+	tocol = target_color
 	flashframe = flashlength
 
 #initiate camera shake
@@ -71,3 +82,7 @@ func shake(length,recoverlength,offsetlength):
 	shake_time_left = length
 	current_shake_offset = offsetlength
 	current_recovery_length = recoverlength
+
+func slap(slap : Vector2):
+	slap_spring_offset = (slap_spring_offset*slap_spring_direction + slap).length()
+	slap_spring_direction = (slap_spring_offset*slap_spring_direction + slap).normalized()

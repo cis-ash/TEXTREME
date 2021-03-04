@@ -1,0 +1,12 @@
+Editor:
+
+	Switch tab : Ctrl+[ and ctrl+]
+	Move tab   : Ctrl+Alt+[ and Ctrl+Alt+]
+	Close tab  : Ctrl+W
+	Change size: Ctrl+= and Ctrl+-
+	
+File select:
+
+	Select next: Tab
+	Select prev: Shift+Tab
+	

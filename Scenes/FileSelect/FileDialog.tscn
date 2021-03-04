@@ -1,0 +1,48 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scenes/FileSelect/Fileselect.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/SpecialLineEdit/SpacialLineEdit.tscn" type="PackedScene" id=2]
+
+[sub_resource type="Theme" id=1]
+FileDialog/colors/files_disabled = Color( 0, 0, 0, 0.7 )
+FileDialog/icons/folder = null
+FileDialog/icons/parent_folder = null
+FileDialog/icons/reload = null
+WindowDialog/colors/title_color = Color( 0, 0, 0, 1 )
+WindowDialog/constants/close_h_ofs = 18
+WindowDialog/constants/close_v_ofs = 18
+WindowDialog/constants/scaleborder_size = 4
+WindowDialog/constants/title_height = 20
+WindowDialog/fonts/title_font = null
+WindowDialog/icons/close = null
+WindowDialog/icons/close_highlight = null
+WindowDialog/styles/panel = null
+
+[node name="FileDialog" type="FileDialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 50.0
+theme = SubResource( 1 )
+access = 2
+show_hidden_files = true
+current_dir = "/home/maks/gitreps/TEXTREME"
+current_path = "/home/maks/gitreps/TEXTREME/"
+script = ExtResource( 1 )
+
+[node name="SpacialLineEdit" parent="." instance=ExtResource( 2 )]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+size_flags_horizontal = 3
+
+[node name="SpacialLineEdit2" parent="." instance=ExtResource( 2 )]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+size_flags_horizontal = 3
+[connection signal="about_to_show" from="." to="." method="set_process_input" binds= [ true ]]
+[connection signal="popup_hide" from="." to="." method="set_process_input" binds= [ false ]]
+[connection signal="text_entered" from="SpacialLineEdit" to="." method="on_file_name_entered"]
+[connection signal="text_entered" from="SpacialLineEdit2" to="." method="_on_new_path_entered"]

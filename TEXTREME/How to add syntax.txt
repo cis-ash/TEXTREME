@@ -1,5 +1,6 @@
-To have a certain word highlited in the editor, add a line structured like this to the syntax.txt file:
+To have a certain word highlighted in the editor, add a line structured like this to the syntax.txt file:
 [word],[color],
+
 (last line shouldn't end with a comma)
 if the app can't read the file, the file is absent, or a certain color is not recognized, it will default to white
 A complete list of recognized colors can be found below
