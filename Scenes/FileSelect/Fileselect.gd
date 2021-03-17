@@ -9,7 +9,7 @@ onready var custom_line_edit : LineEdit = $SpacialLineEdit
 onready var custom_path_edit : LineEdit = $SpacialLineEdit2
 
 onready var top_bar : Control = get_vbox().get_child(0)
-onready var stock_path_bar : LineEdit = top_bar.get_child(2)
+onready var stock_path_bar : LineEdit = top_bar.get_child(3)
 onready var bottom_bar : Control = get_vbox().get_child(3)
 
 var saved_path_caret : int = 0

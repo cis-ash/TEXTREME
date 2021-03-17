@@ -28,11 +28,16 @@ _global_script_class_icons={
 
 config/name="TEXTREME"
 run/main_scene="res://Scenes/Main/MainScene.tscn"
+run/low_processor_mode=true
 config/icon="res://icon.png"
 
 [autoload]
 
 Config="*res://Scripts/Config.gd"
+
+[debug]
+
+settings/fps/force_fps=60
 
 [input]
 

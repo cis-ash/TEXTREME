@@ -99,7 +99,6 @@ particle_effect_spawner_p = NodePath("../ParticleEffectSpawner")
 sound_manager_p = NodePath("../SoundManager")
 
 [node name="OtherOneRemoval" parent="TextEffectManager" instance=ExtResource( 5 )]
-editor/display_folded = true
 visible = false
 z_index = 10
 recoil_offset = 4
@@ -116,9 +115,6 @@ position = Vector2( 4, 4 )
 
 [node name="End" parent="TextEffectManager/OtherOneRemoval" index="2"]
 position = Vector2( -4, 4 )
-
-[node name="DebugPreview" parent="TextEffectManager/OtherOneRemoval" index="3"]
-buffer_size = 60
 
 [node name="OtherOneAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
 visible = false
@@ -139,7 +135,6 @@ sound_name = "Keystroke"
 sound_volume_db = -5.0
 
 [node name="DashAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
-editor/display_folded = true
 visible = false
 recoil_offset = 4
 recoil_time = 0.2
@@ -154,11 +149,7 @@ position = Vector2( 10, 10 )
 [node name="End" parent="TextEffectManager/DashAdd" index="2"]
 position = Vector2( -10, 10 )
 
-[node name="DebugPreview" parent="TextEffectManager/DashAdd" index="3"]
-buffer_size = 60
-
 [node name="DotAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
-editor/display_folded = true
 visible = false
 recoil_offset = 5
 recoil_time = 0.05
@@ -173,11 +164,7 @@ position = Vector2( 99, 9 )
 [node name="End" parent="TextEffectManager/DotAdd" index="2"]
 position = Vector2( 99, 9 )
 
-[node name="DebugPreview" parent="TextEffectManager/DotAdd" index="3"]
-buffer_size = 60
-
 [node name="ExplamationAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
-editor/display_folded = true
 visible = false
 recoil_offset = 8
 recoil_time = 0.05
@@ -192,11 +179,7 @@ position = Vector2( 9, 19 )
 [node name="End" parent="TextEffectManager/ExplamationAdd" index="2"]
 position = Vector2( 9, 19 )
 
-[node name="DebugPreview" parent="TextEffectManager/ExplamationAdd" index="3"]
-buffer_size = 60
-
 [node name="QuestionAdd" parent="TextEffectManager" instance=ExtResource( 5 )]
-editor/display_folded = true
 visible = false
 recoil_offset = 8
 recoil_time = 0.05
@@ -211,9 +194,6 @@ position = Vector2( 9, 19 )
 [node name="End" parent="TextEffectManager/QuestionAdd" index="2"]
 position = Vector2( 9, 19 )
 
-[node name="DebugPreview" parent="TextEffectManager/QuestionAdd" index="3"]
-buffer_size = 60
-
 [node name="WhiteSpaceAdded" parent="TextEffectManager" instance=ExtResource( 5 )]
 visible = false
 recoil_offset = 4
@@ -223,7 +203,6 @@ sound_name = "Keystroke"
 sound_volume_db = -5.0
 
 [node name="Lazer" parent="TextEffectManager" instance=ExtResource( 5 )]
-editor/display_folded = true
 visible = false
 slap_offset = Vector2( 0, 50 )
 recoil_offset = 8
@@ -241,11 +220,7 @@ position = Vector2( 10, -10 )
 [node name="End" parent="TextEffectManager/Lazer" index="2"]
 position = Vector2( 10, 10 )
 
-[node name="DebugPreview" parent="TextEffectManager/Lazer" index="3"]
-buffer_size = 60
-
 [node name="TabSwitchLeft" parent="TextEffectManager" instance=ExtResource( 5 )]
-editor/display_folded = true
 visible = false
 slap_offset = Vector2( -10, 0 )
 recoil_offset = 2
@@ -253,12 +228,8 @@ recoil_time = 0.4
 flash_time = 0.4
 sound_name = "Keystroke"
 sound_volume_db = -8.0
-
-[node name="DebugPreview" parent="TextEffectManager/TabSwitchLeft" index="3"]
-buffer_size = 60
 
 [node name="TabSwitchRight" parent="TextEffectManager" instance=ExtResource( 5 )]
-editor/display_folded = true
 visible = false
 slap_offset = Vector2( -10, 0 )
 recoil_offset = 2
@@ -267,11 +238,7 @@ flash_time = 0.4
 sound_name = "Keystroke"
 sound_volume_db = -8.0
 
-[node name="DebugPreview" parent="TextEffectManager/TabSwitchRight" index="3"]
-buffer_size = 60
-
 [node name="EditorTabClosed" parent="TextEffectManager" instance=ExtResource( 5 )]
-editor/display_folded = true
 visible = false
 slap_offset = Vector2( 0, 10 )
 recoil_offset = 2
@@ -280,20 +247,13 @@ flash_time = 0.4
 sound_name = "Keystroke"
 sound_volume_db = -8.0
 
-[node name="DebugPreview" parent="TextEffectManager/EditorTabClosed" index="3"]
-buffer_size = 60
-
 [node name="EditorFileDialogShow" parent="TextEffectManager" instance=ExtResource( 5 )]
-editor/display_folded = true
 visible = false
 recoil_offset = 4
 recoil_time = 0.2
 flash_time = 0.2
 sound_name = "Keystroke"
 sound_volume_db = -8.0
-
-[node name="DebugPreview" parent="TextEffectManager/EditorFileDialogShow" index="3"]
-buffer_size = 60
 
 [node name="CameraManager" type="Node" parent="."]
 script = ExtResource( 14 )
@@ -367,6 +327,8 @@ size_flags_vertical = 11
 [node name="FileDialog" parent="UI/TotalContainer/Editor/ActualEditorContainer" instance=ExtResource( 20 )]
 margin_top = 20.0
 theme = SubResource( 1 )
+current_dir = "/Users/levka/Documents/GitHub/TEXTREME"
+current_path = "/Users/levka/Documents/GitHub/TEXTREME/"
 pop_up_offset = Vector2( 0, 10 )
 
 [node name="TabContainer" type="TabContainer" parent="UI/TotalContainer/Editor/ActualEditorContainer"]
@@ -511,8 +473,8 @@ __meta__ = {
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileSaveSelectHint" method="hide"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/EditorHint" method="show"]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/FileDialog" to="UI/TotalContainer/FileLoadSelectHint" method="hide"]
-[connection signal="confirmed" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="TextEffectManager" method="play_camera_effect" binds= [ "EditorTabClosed", false ]]
 [connection signal="confirmed" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="UI/TotalContainer/Editor" method="_close_current_tab"]
+[connection signal="confirmed" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="TextEffectManager" method="play_camera_effect" binds= [ "EditorTabClosed", false ]]
 [connection signal="popup_hide" from="UI/TotalContainer/Editor/ActualEditorContainer/CloseDialog" to="UI/TotalContainer/Editor" method="_set_is_input_enabled" binds= [ true ]]
 
 [editable path="TextEffectManager/OtherOneRemoval"]
