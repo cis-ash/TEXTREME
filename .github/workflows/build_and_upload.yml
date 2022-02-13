@@ -1,0 +1,158 @@
+# workflow that builds and uploads the game to itch.io
+
+name: build_and_upload
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+    inputs:
+      uploadChannelPrefix:
+        description: 'itch.io channel prefix'
+        required: true
+        default: 'latest'
+
+env:
+  GODOT_VERSION: 3.4.2
+  EXPORT_NAME: TEXTREME
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Exports all the versions using godot engine
+  export:
+    name: Export
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [win-32, linux-64bit, linux-32bit, mac]
+    container:
+      image: barichello/godot-ci:3.4.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+      - name: Build
+        run: |
+          mkdir -v -p build/result
+          godot -v --export ${{ matrix.platform }} build/result/$EXPORT_NAME
+      - name: Include styles
+        run: cp -r TEXTREME/Syntax build/result
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ matrix.platform }}
+          path: build/result
+  repack-linux:
+    name: Repack Linux
+    needs: export
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Linux 32 artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: linux-64bit
+          path: linux-64bit
+      - name: Download Linux 64 artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: linux-32bit
+          path: linux-32bit
+      - name: Rename exe
+        run: |
+          mv linux-32bit/$EXPORT_NAME linux-32bit/$EXPORT_NAME.x86
+          mv linux-64bit/$EXPORT_NAME linux-64bit/$EXPORT_NAME.x86_64
+      - name: Set permissions
+        run: |
+          chmod 775 linux-32bit/$EXPORT_NAME.x86
+          chmod 775 linux-64bit/$EXPORT_NAME.x86_64
+      - name: Archive
+        run: |
+          tar -czf linux-32bit.tar.gz linux-32bit
+          tar -czf linux-64bit.tar.gz linux-64bit
+      - name: Upload 32 artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: linux-32bit-packed
+          path: linux-32bit.tar.gz
+      - name: Upload 64 artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: linux-64bit-packed
+          path: linux-64bit.tar.gz
+  repack-mac:
+    name: Repack MAC
+    needs: export
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download MAC artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: mac
+          path: mac
+      - name: Repack
+        run: |
+          cd mac
+          unzip $EXPORT_NAME
+          rm $EXPORT_NAME
+          zip -r mac.zip *
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: mac-packed
+          path: mac/mac.zip
+  repack-win:
+    name: Repack Windows
+    needs: export
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: win-32
+          path: win-32
+      - name: Repack
+        run: |
+          cd win-32
+          mv $EXPORT_NAME $EXPORT_NAME.exe
+          zip -r win-32.zip *
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: win-32-packed
+          path: win-32/win-32.zip
+  upload-itch:
+    needs:
+      - repack-mac
+      - repack-linux
+      - repack-win
+    name: Upload to itch.io
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        artifact: [win-32, linux-64bit, linux-32bit, mac]
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ matrix.artifact }}-packed
+          path: artifact
+      - uses: josephbmanley/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: ${{ github.event.inputs.uploadChannelPrefix }}-${{ matrix.artifact }}
+          ITCH_GAME: textreme
+          ITCH_USER: ash-k
+          PACKAGE: artifact
+
+
+
+
+
+
+      
+      
+
